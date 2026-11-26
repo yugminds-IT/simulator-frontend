@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Model sheet</title>
+  <style>
+    body { margin: 16px; background: #f5eee2; font: 13px system-ui, sans-serif; color: #1d2230; }
+    main { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+    figure { margin: 0; background: #fbf7ef; border: 1px solid #e2d6c3; border-radius: 10px; padding: 6px; }
+    figure div { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    img { width: 100%; background: #fff; border-radius: 6px; }
+    figcaption { padding: 4px 2px 0; } b { font-size: 14px; } small { color: #6a6e78; }
+  </style>
+</head>
+<body>
+  <!-- Verification sheet: every model in manifest.json, front (left) and top (right), orthographic, anchors as red dots. -->
+  <main id="sheet"></main>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    const S = 300, r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    r.setSize(S, S * 0.7);
+    r.toneMapping = THREE.ACESFilmicToneMapping;
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#ffffff');
+    scene.environment = new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(), 0.04).texture;
+    const manifest = await (await fetch('/models/manifest.json')).json();
+    const dotGeo = new THREE.SphereGeometry(1, 8, 6), dotMat = new THREE.MeshBasicMaterial({ color: 0xe0393e, depthTest: false });
+
+    for (const m of manifest) {
+      const model = (await new GLTFLoader().loadAsync('/' + m.file)).scene;
+      scene.add(model);
+      const box = new THREE.Box3().setFromObject(model), c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
+      const dots = m.anchors.map((a) => { const d = new THREE.Mesh(dotGeo, dotMat); d.renderOrder = 9; d.scale.setScalar(size.length() / 160); model.getObjectByName(a).getWorldPosition(d.position); scene.add(d); return d; });
+      const shots = [['front', new THREE.Vector3(0, 0, 1), size.x, size.y], ['top', new THREE.Vector3(0, 1, 0), size.x, size.z]].map(([, dir, w, h]) => {
+        const half = Math.max(w / 2, h / 2 / 0.7) * 1.12;
+        const cam = new THREE.OrthographicCamera(-half, half, half * 0.7, -half * 0.7, -10, 10);
+        cam.position.copy(c).add(dir.clone().multiplyScalar(1));
+        if (dir.y) cam.up.set(0, 0, -1);
+        cam.lookAt(c);
+        r.render(scene, cam);
+        return r.domElement.toDataURL();
+      });
+      dots.forEach((d) => scene.remove(d));
+      scene.remove(model);
+      const d = m.dimensions_mm;
+      document.getElementById('sheet').insertAdjacentHTML('beforeend',
+        `<figure><div><img src="${shots[0]}" alt="${m.id} front"><img src="${shots[1]}" alt="${m.id} top"></div>` +
+        `<figcaption><b>${m.id}</b> <small>${(size.x * 1000).toFixed(1)} × ${(size.z * 1000).toFixed(1)} × ${(size.y * 1000).toFixed(1)} mm · manifest ${d.w} × ${d.d} × ${d.h} (${d.source}) · ${m.anchors.length} anchors · ${m.status}</small></figcaption></figure>`);
+    }
+    document.body.dataset.done = '1';
+  </script>
+</body>
+</html>

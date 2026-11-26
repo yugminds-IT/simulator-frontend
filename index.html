@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Learn electronics and coding with the Robo Coders ESP32 robotics kit: interactive 3D parts, wiring and code." />
+  <title>Robo Coders Kit · Learn</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a1f4d'/%3E%3Cpath d='M9 22V10h7a4 4 0 0 1 0 8h-7m6 0 5 4' stroke='%23fbbf24' stroke-width='3' fill='none'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <div id="loader" class="loader" role="status"><div class="spin"></div><p>Loading the kit…</p></div>
+
+  <main id="home" class="home" hidden></main>
+
+  <div class="app">
+    <header class="top">
+      <a class="mark" href="#/" title="Back to the book">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20a22 22 0 0 1 32 0M14 26a13 13 0 0 1 20 0M20 32a5 5 0 0 1 8 0" /><circle cx="24" cy="38" r="3" /></svg>
+        <span>Robo Coders</span>
+      </a>
+      <div class="brand"><h1>Robo Coders</h1></div>
+      <nav class="rail" aria-label="Sections">
+        <button class="navbtn" data-nav="parts"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1" /><rect x="9.5" y="9.5" width="5" height="5" /><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" /></svg>Components</button>
+        <button class="navbtn" data-nav="lessons"><svg viewBox="0 0 24 24"><path d="M3 5h7a3 3 0 0 1 2 1 3 3 0 0 1 2-1h7v14h-7a2 2 0 0 0-2 1 2 2 0 0 0-2-1H3z" /><path d="M12 6v14" /></svg>Lessons</button>
+        <button class="navbtn" data-nav="build"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z" /></svg>Build</button>
+      </nav>
+      <div class="status">
+        <span id="prog-label">Lessons done</span>
+        <div class="bar"><i id="prog-fill"></i></div>
+        <b id="prog-count" class="count">0/0</b>
+      </div>
+      <div class="xpc" id="xpc" title="Your player level: every finished lesson earns XP">
+        <span class="xpc-lv" id="xpc-lv"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18.5" /></svg><span id="xpc-lvn">1</span></span>
+        <span class="xpc-n"><span id="xpc-xp">0 XP</span><i><b id="xpc-fill"></b></i></span>
+      </div>
+      <button type="button" class="lx-mute" id="mute" aria-pressed="false" aria-label="Mute sounds"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" /><path class="on" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11" /><path class="off" d="M16 9l5 6M21 9l-5 6" /></svg></button>
+    </header>
+
+    <section class="strip" aria-labelledby="strip-title">
+      <div class="strip-head"><h2 id="strip-title">Lessons</h2><div id="filters" class="filters" role="group" aria-label="Show components" hidden></div></div>
+      <ol id="cards" class="cards"></ol>
+      <div class="cards-nav">
+        <button class="arrow" data-scroll="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg>Previous</button>
+        <button class="arrow" data-scroll="1" aria-label="Next">Next<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
+      </div>
+    </section>
+
+    <main id="stage" class="stage">
+      <canvas aria-label="3D model of the selected part"></canvas>
+      <svg id="leaders" aria-hidden="true"></svg>
+      <div id="tags"></div>
+      <div id="tooltip" class="tooltip" hidden></div>
+      <div id="build-head" class="bhead" hidden><i><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z" /></svg></i><div><b>Workbench</b><span></span></div></div>
+      <div id="build-tools" class="btools" hidden>
+        <button data-b="play" title="Play / pause (Space)"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg></button>
+        <button data-b="speed" title="Playback speed">1×</button>
+        <button data-b="explode" title="Exploded view (E)"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5-8 4.5-8-4.5zM4 12l8 4.5 8-4.5M4 16.5l8 4.5 8-4.5" /></svg></button>
+      </div>
+      <div id="focus" class="focus" hidden><button class="x" aria-label="Close">×</button><h3></h3><div class="fbody"></div></div>
+      <div id="schematic" class="schem" hidden><header><svg viewBox="0 0 24 24"><path d="M4 20l6-6M14 4l6 6-8 8-6-6z" /></svg><span class="title">Schematic</span><button class="x" aria-label="Close">×</button></header><div class="body"></div></div>
+      <div id="arena" class="arena-hud" hidden>
+        <header class="ah-head">
+          <i class="ah-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.2" /><path d="M3.8 10.2C7 9 9.6 9.6 10.2 11M20.2 10.2C17 9 14.4 9.6 13.8 11M12 14.2v6.2" /></svg></i>
+          <div><h3 id="ah-title">Test arena</h3><p>Drive with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or the controls on the right</p></div>
+          <span class="ah-sim"><i></i>Simulator</span>
+        </header>
+        <dl class="tele" id="arena-tele"></dl>
+        <div class="ah-tools" role="toolbar" aria-label="Camera">
+          <button type="button" data-view="in" title="Zoom in" aria-label="Zoom in"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14" /></svg></button>
+          <button type="button" data-view="out" title="Zoom out" aria-label="Zoom out"><svg viewBox="0 0 24 24"><path d="M5 12h14" /></svg></button>
+          <button type="button" data-ar="chase" class="chase" aria-pressed="false" title="Camera follows the car (C)" aria-label="Camera follows the car"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="12" height="10" rx="2" /><path d="M15 10.5l6-3.5v10l-6-3.5" /></svg></button>
+        </div>
+        <figure class="amap"><canvas width="250" height="180" aria-label="Top view of the arena with the car"></canvas><figcaption><b id="amap-size">Arena</b><button type="button" data-ar="reset" title="Put the car back at the start" aria-label="Put the car back at the start"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v5h5" /></svg></button></figcaption></figure>
+        <section class="aflow" aria-label="Program flow">
+          <div class="af-svg" id="af-svg"></div>
+          <p class="af-state"><b id="af-t">Program is off</b><small id="af-s">Run it to watch the car decide</small></p>
+          <footer><span>Program flow</span><button type="button" class="af-run" id="af-run"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg><span>Run</span></button><button type="button" class="af-big" id="af-big" aria-pressed="false" title="Make the flowchart bigger" aria-label="Make the flowchart bigger"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7" /></svg></button></footer>
+        </section>
+      </div>
+      <p class="hint">Drag to turn · Right-drag to move · Scroll to zoom · Click a part to learn about it</p>
+      <div class="viewbar" role="toolbar" aria-label="View">
+        <button data-view="left" title="Turn left"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v5h5" /></svg></button>
+        <button data-view="right" title="Turn right"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5" /></svg></button>
+        <button data-view="out" title="Zoom out" class="sep"><svg viewBox="0 0 24 24"><path d="M5 12h14" /></svg></button>
+        <button data-view="in" title="Zoom in"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14" /></svg></button>
+        <button data-view="top" title="Look from the top" class="sep"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2" /><circle cx="12" cy="12" r="2" /></svg></button>
+        <button data-view="reset" title="Reset the view"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><path d="M12 4v4M12 16v4M4 12h4M16 12h4" /></svg></button>
+        <button data-act="schematic" title="Show or hide the schematic" class="sep"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-5 3 10 2-5h7" /></svg></button>
+        <button data-view="labels" title="Show or hide labels" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="10" height="6" rx="1" /><path d="M13 9h4l3 6" /></svg></button>
+        <button data-view="clear" title="Hide all names and lines"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" /><circle cx="12" cy="12" r="3" /><path d="M4 4l16 16" /></svg></button>
+      </div>
+    </main>
+
+    <aside class="panel">
+      <section class="card buildp" id="build-panel" hidden></section>
+      <section class="card drivep" id="drive-panel" hidden>
+        <header class="bp-head"><i class="num">03</i><div><small>Drive · Step 3 of 3</small><h2 id="dp-title">Drive it</h2></div></header>
+        <div class="bp-body dp-body">
+          <p id="dp-goal"></p>
+          <h4>Drive</h4>
+          <div class="dp-drive">
+            <div class="dpad" role="group" aria-label="Drive the car">
+              <button type="button" data-d="f" aria-label="Forward (W)"><svg viewBox="0 0 24 24"><path d="M12 5l7 9H5z" /></svg></button>
+              <button type="button" data-d="l" aria-label="Turn left (A)"><svg viewBox="0 0 24 24"><path d="M5 12l9-7v14z" /></svg></button>
+              <button type="button" data-d="s" aria-label="Stop (Space)" class="stop"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5" /></svg></button>
+              <button type="button" data-d="r" aria-label="Turn right (D)"><svg viewBox="0 0 24 24"><path d="M19 12l-9 7V5z" /></svg></button>
+              <button type="button" data-d="b" aria-label="Back (S)"><svg viewBox="0 0 24 24"><path d="M12 19l-7-9h14z" /></svg></button>
+            </div>
+            <div class="dp-ctl">
+              <label class="spd"><span>Speed <output id="ar-speed-v">70%</output></span><input type="range" id="ar-speed" min="30" max="100" step="5" value="70" /></label>
+              <span class="lbl">Who drives</span>
+              <div class="seg dp-mode" role="group" aria-label="Who drives"><button type="button" data-mode="program">Program</button><button type="button" data-mode="manual">You</button><button type="button" data-mode="stop">Stop</button></div>
+            </div>
+          </div>
+          <button type="button" class="pushbtn" id="dp-push" hidden><i aria-hidden="true"></i><span><b>Hold the push button</b><small>The button on the car: D35 reads 1 while it is held · or hold <kbd>B</kbd></small></span></button>
+          <p class="keys"><kbd>W A S D</kbd> drive · <kbd>Space</kbd> stop · <kbd>1</kbd>–<kbd>3</kbd> who drives · <kbd>C</kbd> follow</p>
+          <div class="mon-slot"></div>
+        </div>
+      </section>
+      <section class="card info">
+        <div class="tabs" role="tablist">
+          <button role="tab" data-tab="overview">Overview</button>
+          <button role="tab" data-tab="steps">Steps</button>
+          <button role="tab" data-tab="pinout">Pinout</button>
+          <button role="tab" data-tab="specs">Specs</button>
+        </div>
+        <div id="tab-body" class="tab-body"></div>
+      </section>
+      <section class="card code" id="code-card">
+        <div class="code-head">
+          <h3>Try it yourself</h3>
+          <div class="seg" role="group" aria-label="Code view"><button data-code="blocks">Blocks</button><button data-code="cpp">C++</button></div>
+          <button id="reset" title="Reset the program"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v5h5" /></svg></button>
+          <button id="copy" title="Copy the C++ code"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" /></svg></button>
+          <button id="expand" title="Make the editor bigger" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></button>
+          <button id="run" class="run" title="Upload and run"><svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg><b class="i-play">Run</b><svg class="i-stop" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" /></svg><b class="i-stop">Stop</b></button>
+        </div>
+        <div id="params" class="params"></div>
+        <div id="blocks" class="blocks"></div>
+        <pre class="src" hidden><code id="code"></code></pre>
+        <div class="io"><div id="pins" class="pins"></div><canvas id="signals" class="signals" aria-label="Pin signals over time"></canvas></div>
+        <div class="monitor" id="monitor" data-state="idle">
+          <div class="mon-grip" title="Drag to resize" aria-hidden="true"></div>
+          <div class="mon-head">
+            <i class="dot"></i><b>Serial monitor</b><span class="mon-state">idle</span>
+            <div class="seg mon-tabs" role="group" aria-label="Monitor view"><button data-mon="text" aria-pressed="true">Monitor</button><button data-mon="plot" aria-pressed="false">Plotter</button></div>
+            <select class="mon-baud" aria-label="Baud rate" title="Baud rate: must match Serial.begin()"><option value="9600">9600 baud</option><option value="115200">115200 baud</option></select>
+            <button data-mon-act="time" title="Show timestamps"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><path d="M12 7v5l3 2" /></svg></button>
+            <button data-mon-act="scroll" title="Auto-scroll"><svg viewBox="0 0 24 24"><path d="M12 4v13M6 12l6 6 6-6M5 21h14" /></svg></button>
+            <button data-mon-act="clear" title="Clear output"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" /></svg></button>
+            <button data-mon-act="fold" title="Hide or show the monitor" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg></button>
+          </div>
+          <div id="serial" class="serial" aria-live="polite"></div>
+          <canvas class="plot" hidden aria-label="Serial plotter"></canvas>
+        </div>
+      </section>
+      <nav id="phases" class="phases card" aria-label="This lesson's steps" hidden></nav>
+    </aside>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

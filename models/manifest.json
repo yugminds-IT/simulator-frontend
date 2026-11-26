@@ -1,0 +1,1319 @@
+[
+  {
+    "id": "esp32",
+    "name": "ESP32 DevKit V1 (30-pin)",
+    "file": "models/esp32.glb",
+    "source": "models/esp32.blend",
+    "dimensions_mm": {
+      "w": 28.2,
+      "d": 51.8,
+      "h": 13.2,
+      "source": "photo",
+      "ref": "Board 51.8x28.2 (measured, forum.fritzing.org/t/doit-esp32-devkit-v1/6158); WROOM-32 18x25.5x3.1 (Espressif datasheet); h = 8.5 header pins + 1.6 PCB + 3.1 module"
+    },
+    "anchors": [
+      "anchor_esp32_3v3",
+      "anchor_esp32_gnd_1",
+      "anchor_esp32_d15",
+      "anchor_esp32_d2",
+      "anchor_esp32_d4",
+      "anchor_esp32_rx2",
+      "anchor_esp32_tx2",
+      "anchor_esp32_d5",
+      "anchor_esp32_d18",
+      "anchor_esp32_d19",
+      "anchor_esp32_d21",
+      "anchor_esp32_rx0",
+      "anchor_esp32_tx0",
+      "anchor_esp32_d22",
+      "anchor_esp32_d23",
+      "anchor_esp32_vin",
+      "anchor_esp32_gnd_2",
+      "anchor_esp32_d13",
+      "anchor_esp32_d12",
+      "anchor_esp32_d14",
+      "anchor_esp32_d27",
+      "anchor_esp32_d26",
+      "anchor_esp32_d25",
+      "anchor_esp32_d33",
+      "anchor_esp32_d32",
+      "anchor_esp32_d35",
+      "anchor_esp32_d34",
+      "anchor_esp32_vn",
+      "anchor_esp32_vp",
+      "anchor_esp32_en",
+      "anchor_esp32_pins_left",
+      "anchor_esp32_pins_right",
+      "anchor_esp32_module",
+      "anchor_esp32_antenna",
+      "anchor_esp32_usb",
+      "anchor_esp32_btn_boot",
+      "anchor_esp32_btn_en",
+      "anchor_esp32_usb_uart",
+      "anchor_esp32_regulator",
+      "anchor_esp32_led_gpio2",
+      "anchor_esp32_led_power"
+    ],
+    "interface": "mcu",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_esp32_3v3": "3V3",
+      "anchor_esp32_gnd_1": "GND",
+      "anchor_esp32_d15": "D15 \u00b7 GPIO15",
+      "anchor_esp32_d2": "D2 \u00b7 GPIO2",
+      "anchor_esp32_d4": "D4 \u00b7 GPIO4",
+      "anchor_esp32_rx2": "RX2 \u00b7 GPIO16",
+      "anchor_esp32_tx2": "TX2 \u00b7 GPIO17",
+      "anchor_esp32_d5": "D5 \u00b7 GPIO5",
+      "anchor_esp32_d18": "D18 \u00b7 GPIO18",
+      "anchor_esp32_d19": "D19 \u00b7 GPIO19",
+      "anchor_esp32_d21": "D21 \u00b7 GPIO21",
+      "anchor_esp32_rx0": "RX0 \u00b7 GPIO3",
+      "anchor_esp32_tx0": "TX0 \u00b7 GPIO1",
+      "anchor_esp32_d22": "D22 \u00b7 GPIO22",
+      "anchor_esp32_d23": "D23 \u00b7 GPIO23",
+      "anchor_esp32_vin": "VIN (5 V)",
+      "anchor_esp32_gnd_2": "GND",
+      "anchor_esp32_d13": "D13 \u00b7 GPIO13",
+      "anchor_esp32_d12": "D12 \u00b7 GPIO12",
+      "anchor_esp32_d14": "D14 \u00b7 GPIO14",
+      "anchor_esp32_d27": "D27 \u00b7 GPIO27",
+      "anchor_esp32_d26": "D26 \u00b7 GPIO26",
+      "anchor_esp32_d25": "D25 \u00b7 GPIO25",
+      "anchor_esp32_d33": "D33 \u00b7 GPIO33",
+      "anchor_esp32_d32": "D32 \u00b7 GPIO32",
+      "anchor_esp32_d35": "D35 \u00b7 GPIO35",
+      "anchor_esp32_d34": "D34 \u00b7 GPIO34",
+      "anchor_esp32_vn": "VN \u00b7 GPIO39",
+      "anchor_esp32_vp": "VP \u00b7 GPIO36",
+      "anchor_esp32_en": "EN (reset)"
+    },
+    "todo": [
+      "row spacing 22.86 mm read from render",
+      "pin rows centred along board length",
+      "micro-USB, buttons, chips and passives placed from the render",
+      "mounting holes assumed 3 mm at the corners",
+      "clones vary in width (23.4-28.5 mm)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "tb6612",
+    "name": "TB6612FNG motor driver breakout",
+    "file": "models/tb6612.glb",
+    "source": "models/tb6612.blend",
+    "dimensions_mm": {
+      "w": 20.32,
+      "d": 20.32,
+      "h": 11.5,
+      "source": "datasheet",
+      "ref": "0.8x0.8 in, SparkFun ROB-14451 product page; pin order from base-board schematic U6"
+    },
+    "anchors": [
+      "anchor_tb6612_vm",
+      "anchor_tb6612_vcc",
+      "anchor_tb6612_gnd_1",
+      "anchor_tb6612_ao1",
+      "anchor_tb6612_ao2",
+      "anchor_tb6612_bo2",
+      "anchor_tb6612_bo1",
+      "anchor_tb6612_gnd_2",
+      "anchor_tb6612_pwma",
+      "anchor_tb6612_ain2",
+      "anchor_tb6612_ain1",
+      "anchor_tb6612_stby",
+      "anchor_tb6612_bin1",
+      "anchor_tb6612_bin2",
+      "anchor_tb6612_pwmb",
+      "anchor_tb6612_gnd_3",
+      "anchor_tb6612_chip"
+    ],
+    "interface": "motor driver (PWM + direction)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_tb6612_vm": "VM (motor supply, from 7V/5V switch)",
+      "anchor_tb6612_vcc": "VCC (3.3 V logic)",
+      "anchor_tb6612_gnd_1": "GND",
+      "anchor_tb6612_ao1": "AO1 \u2192 left motors (CN6, CN19)",
+      "anchor_tb6612_ao2": "AO2 \u2192 left motors",
+      "anchor_tb6612_bo2": "BO2 \u2192 right motors",
+      "anchor_tb6612_bo1": "BO1 \u2192 right motors (CN7, CN8)",
+      "anchor_tb6612_gnd_2": "GND",
+      "anchor_tb6612_pwma": "PWMA \u00b7 3.3 V via R1",
+      "anchor_tb6612_ain2": "AIN2 \u00b7 D14",
+      "anchor_tb6612_ain1": "AIN1 \u00b7 D27",
+      "anchor_tb6612_stby": "STBY \u00b7 3.3 V via R1",
+      "anchor_tb6612_bin1": "BIN1 \u00b7 D26",
+      "anchor_tb6612_bin2": "BIN2 \u00b7 D25",
+      "anchor_tb6612_pwmb": "PWMB \u00b7 3.3 V via R1",
+      "anchor_tb6612_gnd_3": "GND"
+    },
+    "todo": [
+      "row spacing 0.6\" read from render",
+      "chip and capacitor positions from render",
+      "socketed or soldered on base board"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "base",
+    "name": "Robo Coders base board",
+    "file": "models/base.glb",
+    "source": "models/base.blend",
+    "dimensions_mm": {
+      "w": 100.0,
+      "d": 90.0,
+      "h": 10.12,
+      "source": "photo",
+      "ref": "SMART INNOVATOR KIT board, EasyEDA top view + schematic (user, 2026-11-21): scale from the ESP32 socket pitch, pads \u00b10.3 mm"
+    },
+    "anchors": [
+      "anchor_base_esp32_socket",
+      "anchor_base_power_module",
+      "anchor_base_power_in_p",
+      "anchor_base_power_in_n",
+      "anchor_base_power_out_p",
+      "anchor_base_power_out_n",
+      "anchor_base_u2_3v3",
+      "anchor_base_u2_gnd",
+      "anchor_base_u2_d15",
+      "anchor_base_u2_d2",
+      "anchor_base_u2_d4",
+      "anchor_base_u2_rx2",
+      "anchor_base_u2_tx2",
+      "anchor_base_u2_d5",
+      "anchor_base_u2_d18",
+      "anchor_base_u2_d19",
+      "anchor_base_u2_d21",
+      "anchor_base_u2_rx0",
+      "anchor_base_u2_tx0",
+      "anchor_base_u2_d22",
+      "anchor_base_u2_d23",
+      "anchor_base_u1_vin",
+      "anchor_base_u1_gnd",
+      "anchor_base_u1_d13",
+      "anchor_base_u1_d12",
+      "anchor_base_u1_d14",
+      "anchor_base_u1_d27",
+      "anchor_base_u1_d26",
+      "anchor_base_u1_d25",
+      "anchor_base_u1_d33",
+      "anchor_base_u1_d32",
+      "anchor_base_u1_d35",
+      "anchor_base_u1_d34",
+      "anchor_base_u1_vn",
+      "anchor_base_u1_vp",
+      "anchor_base_u1_en",
+      "anchor_base_tb6612_vm",
+      "anchor_base_tb6612_vcc",
+      "anchor_base_tb6612_gnd_1",
+      "anchor_base_tb6612_ao1",
+      "anchor_base_tb6612_ao2",
+      "anchor_base_tb6612_bo2",
+      "anchor_base_tb6612_bo1",
+      "anchor_base_tb6612_gnd_2",
+      "anchor_base_tb6612_pwma",
+      "anchor_base_tb6612_ain2",
+      "anchor_base_tb6612_ain1",
+      "anchor_base_tb6612_stby",
+      "anchor_base_tb6612_bin1",
+      "anchor_base_tb6612_bin2",
+      "anchor_base_tb6612_pwmb",
+      "anchor_base_tb6612_gnd_3",
+      "anchor_base_tb6612_socket",
+      "anchor_base_ultrasonic_pin1",
+      "anchor_base_ultrasonic_pin2",
+      "anchor_base_ultrasonic_pin3",
+      "anchor_base_ultrasonic_pin4",
+      "anchor_base_rxtx_pin1",
+      "anchor_base_rxtx_pin2",
+      "anchor_base_rxtx_pin3",
+      "anchor_base_rxtx_pin4",
+      "anchor_base_i2c_pin1",
+      "anchor_base_i2c_pin2",
+      "anchor_base_i2c_pin3",
+      "anchor_base_i2c_pin4",
+      "anchor_base_rgy_pin1",
+      "anchor_base_rgy_pin2",
+      "anchor_base_rgy_pin3",
+      "anchor_base_rgy_pin4",
+      "anchor_base_rx2tx2_pin1",
+      "anchor_base_rx2tx2_pin2",
+      "anchor_base_rx2tx2_pin3",
+      "anchor_base_rx2tx2_pin4",
+      "anchor_base_d23_pin1",
+      "anchor_base_d23_pin2",
+      "anchor_base_d23_pin3",
+      "anchor_base_d32_pin1",
+      "anchor_base_d32_pin2",
+      "anchor_base_d32_pin3",
+      "anchor_base_d13_pin1",
+      "anchor_base_d13_pin2",
+      "anchor_base_d13_pin3",
+      "anchor_base_d33_pin1",
+      "anchor_base_d33_pin2",
+      "anchor_base_d33_pin3",
+      "anchor_base_d36_pin1",
+      "anchor_base_d36_pin2",
+      "anchor_base_d36_pin3",
+      "anchor_base_d35_pin1",
+      "anchor_base_d35_pin2",
+      "anchor_base_d35_pin3",
+      "anchor_base_d39_pin1",
+      "anchor_base_d39_pin2",
+      "anchor_base_d39_pin3",
+      "anchor_base_d34_pin1",
+      "anchor_base_d34_pin2",
+      "anchor_base_d34_pin3",
+      "anchor_base_motor_l1_pin1",
+      "anchor_base_motor_l1_pin2",
+      "anchor_base_motor_l2_pin1",
+      "anchor_base_motor_l2_pin2",
+      "anchor_base_motor_r1_pin1",
+      "anchor_base_motor_r1_pin2",
+      "anchor_base_motor_r2_pin1",
+      "anchor_base_motor_r2_pin2",
+      "anchor_base_bat_pin1",
+      "anchor_base_bat_pin2",
+      "anchor_base_bat",
+      "anchor_base_servo_pin1",
+      "anchor_base_servo_pin2",
+      "anchor_base_servo_pin3",
+      "anchor_base_servo",
+      "anchor_base_sw1",
+      "anchor_base_switch_motor_v",
+      "anchor_base_switch_i2c_v"
+    ],
+    "interface": "carrier board",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_base_power_in_p": "IN+ (battery via SW1)",
+      "anchor_base_power_in_n": "IN\u2212 (GND)",
+      "anchor_base_power_out_p": "OUT+ (5 V rail)",
+      "anchor_base_power_out_n": "OUT\u2212 (GND)",
+      "anchor_base_u2_3v3": "U2 \u00b7 3V3 \u2192 3.3 V rail",
+      "anchor_base_u2_gnd": "U2 \u00b7 GND",
+      "anchor_base_u2_d15": "U2 \u00b7 D15 \u00b7 GPIO15",
+      "anchor_base_u2_d2": "U2 \u00b7 D2 \u00b7 GPIO2",
+      "anchor_base_u2_d4": "U2 \u00b7 D4 \u00b7 GPIO4",
+      "anchor_base_u2_rx2": "U2 \u00b7 RX2 \u00b7 GPIO16 \u2192 CN2 port",
+      "anchor_base_u2_tx2": "U2 \u00b7 TX2 \u00b7 GPIO17 \u2192 CN2 port",
+      "anchor_base_u2_d5": "U2 \u00b7 D5 \u00b7 GPIO5",
+      "anchor_base_u2_d18": "U2 \u00b7 D18 \u00b7 GPIO18 \u2192 ULTRASONIC ECHO",
+      "anchor_base_u2_d19": "U2 \u00b7 D19 \u00b7 GPIO19 \u2192 ULTRASONIC TRIG",
+      "anchor_base_u2_d21": "U2 \u00b7 D21 \u00b7 GPIO21 \u2192 I2C SDA",
+      "anchor_base_u2_rx0": "U2 \u00b7 RX0 \u00b7 GPIO3 \u2192 RX/TX port",
+      "anchor_base_u2_tx0": "U2 \u00b7 TX0 \u00b7 GPIO1 \u2192 RX/TX port",
+      "anchor_base_u2_d22": "U2 \u00b7 D22 \u00b7 GPIO22 \u2192 I2C SCL",
+      "anchor_base_u2_d23": "U2 \u00b7 D23 \u00b7 GPIO23 \u2192 D23 port \u00b7 TRAFFIC R",
+      "anchor_base_u1_vin": "U1 \u00b7 VIN (5 V) \u2192 5 V rail (CA-1235 OUT+)",
+      "anchor_base_u1_gnd": "U1 \u00b7 GND",
+      "anchor_base_u1_d13": "U1 \u00b7 D13 \u00b7 GPIO13 \u2192 D13 port",
+      "anchor_base_u1_d12": "U1 \u00b7 D12 \u00b7 GPIO12",
+      "anchor_base_u1_d14": "U1 \u00b7 D14 \u00b7 GPIO14 \u2192 motor AIN2",
+      "anchor_base_u1_d27": "U1 \u00b7 D27 \u00b7 GPIO27 \u2192 motor AIN1",
+      "anchor_base_u1_d26": "U1 \u00b7 D26 \u00b7 GPIO26 \u2192 motor BIN1",
+      "anchor_base_u1_d25": "U1 \u00b7 D25 \u00b7 GPIO25 \u2192 motor BIN2",
+      "anchor_base_u1_d33": "U1 \u00b7 D33 \u00b7 GPIO33 \u2192 D33 port \u00b7 TRAFFIC G \u00b7 SERVO",
+      "anchor_base_u1_d32": "U1 \u00b7 D32 \u00b7 GPIO32 \u2192 D32 port \u00b7 TRAFFIC Y",
+      "anchor_base_u1_d35": "U1 \u00b7 D35 \u00b7 GPIO35 \u2192 D35 input port",
+      "anchor_base_u1_d34": "U1 \u00b7 D34 \u00b7 GPIO34 \u2192 D34 input port",
+      "anchor_base_u1_vn": "U1 \u00b7 VN \u00b7 GPIO39 \u2192 D39 input port",
+      "anchor_base_u1_vp": "U1 \u00b7 VP \u00b7 GPIO36 \u2192 D36 input port",
+      "anchor_base_u1_en": "U1 \u00b7 EN (reset)",
+      "anchor_base_tb6612_vm": "U6 \u00b7 VM (motor supply, from 7V/5V switch)",
+      "anchor_base_tb6612_vcc": "U6 \u00b7 VCC (3.3 V logic)",
+      "anchor_base_tb6612_gnd_1": "U6 \u00b7 GND",
+      "anchor_base_tb6612_ao1": "U6 \u00b7 AO1 \u2192 left motors (CN6, CN19)",
+      "anchor_base_tb6612_ao2": "U6 \u00b7 AO2 \u2192 left motors",
+      "anchor_base_tb6612_bo2": "U6 \u00b7 BO2 \u2192 right motors",
+      "anchor_base_tb6612_bo1": "U6 \u00b7 BO1 \u2192 right motors (CN7, CN8)",
+      "anchor_base_tb6612_gnd_2": "U6 \u00b7 GND",
+      "anchor_base_tb6612_pwma": "U6 \u00b7 PWMA \u00b7 3.3 V via R1",
+      "anchor_base_tb6612_ain2": "U6 \u00b7 AIN2 \u00b7 D14",
+      "anchor_base_tb6612_ain1": "U6 \u00b7 AIN1 \u00b7 D27",
+      "anchor_base_tb6612_stby": "U6 \u00b7 STBY \u00b7 3.3 V via R1",
+      "anchor_base_tb6612_bin1": "U6 \u00b7 BIN1 \u00b7 D26",
+      "anchor_base_tb6612_bin2": "U6 \u00b7 BIN2 \u00b7 D25",
+      "anchor_base_tb6612_pwmb": "U6 \u00b7 PWMB \u00b7 3.3 V via R1",
+      "anchor_base_tb6612_gnd_3": "U6 \u00b7 GND",
+      "anchor_base_ultrasonic_pin1": "pin 1 \u00b7 GND",
+      "anchor_base_ultrasonic_pin2": "pin 2 \u00b7 ECHO \u00b7 D18",
+      "anchor_base_ultrasonic_pin3": "pin 3 \u00b7 TRIG \u00b7 D19",
+      "anchor_base_ultrasonic_pin4": "pin 4 \u00b7 VCC",
+      "anchor_base_rxtx_pin1": "pin 1 \u00b7 TX0",
+      "anchor_base_rxtx_pin2": "pin 2 \u00b7 RX0",
+      "anchor_base_rxtx_pin3": "pin 3 \u00b7 GND",
+      "anchor_base_rxtx_pin4": "pin 4 \u00b7 VCC",
+      "anchor_base_i2c_pin1": "pin 1 \u00b7 SDA \u00b7 D21",
+      "anchor_base_i2c_pin2": "pin 2 \u00b7 SCL \u00b7 D22",
+      "anchor_base_i2c_pin3": "pin 3 \u00b7 VCC (3V/5V switch)",
+      "anchor_base_i2c_pin4": "pin 4 \u00b7 GND",
+      "anchor_base_rgy_pin1": "pin 1 \u00b7 D32 \u00b7 yellow",
+      "anchor_base_rgy_pin2": "pin 2 \u00b7 D33 \u00b7 green",
+      "anchor_base_rgy_pin3": "pin 3 \u00b7 D23 \u00b7 red",
+      "anchor_base_rgy_pin4": "pin 4 \u00b7 GND",
+      "anchor_base_rx2tx2_pin1": "pin 1 \u00b7 D17 (TX2)",
+      "anchor_base_rx2tx2_pin2": "pin 2 \u00b7 D16 (RX2)",
+      "anchor_base_rx2tx2_pin3": "pin 3 \u00b7 GND",
+      "anchor_base_rx2tx2_pin4": "pin 4 \u00b7 VCC",
+      "anchor_base_d23_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d23_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d23_pin3": "pin 3 \u00b7 D23 (signal)",
+      "anchor_base_d32_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d32_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d32_pin3": "pin 3 \u00b7 D32 (signal)",
+      "anchor_base_d13_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d13_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d13_pin3": "pin 3 \u00b7 D13 (signal)",
+      "anchor_base_d33_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d33_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d33_pin3": "pin 3 \u00b7 D33 (signal)",
+      "anchor_base_d36_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d36_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d36_pin3": "pin 3 \u00b7 D36 / VP (input)",
+      "anchor_base_d35_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d35_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d35_pin3": "pin 3 \u00b7 D35 (input)",
+      "anchor_base_d39_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d39_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d39_pin3": "pin 3 \u00b7 D39 / VN (input)",
+      "anchor_base_d34_pin1": "pin 1 \u00b7 VCC",
+      "anchor_base_d34_pin2": "pin 2 \u00b7 GND",
+      "anchor_base_d34_pin3": "pin 3 \u00b7 D34 (input)",
+      "anchor_base_motor_l1_pin1": "pin 1 \u00b7 AO1",
+      "anchor_base_motor_l1_pin2": "pin 2 \u00b7 AO2",
+      "anchor_base_motor_l2_pin1": "pin 1 \u00b7 AO1",
+      "anchor_base_motor_l2_pin2": "pin 2 \u00b7 AO2",
+      "anchor_base_motor_r1_pin1": "pin 1 \u00b7 BO1",
+      "anchor_base_motor_r1_pin2": "pin 2 \u00b7 BO2",
+      "anchor_base_motor_r2_pin1": "pin 1 \u00b7 BO1",
+      "anchor_base_motor_r2_pin2": "pin 2 \u00b7 BO2",
+      "anchor_base_bat_pin1": "pin 1 \u00b7 BAT + (to SW1)",
+      "anchor_base_bat_pin2": "pin 2 \u00b7 BAT \u2212",
+      "anchor_base_servo_pin1": "pin 1 \u00b7 GND",
+      "anchor_base_servo_pin2": "pin 2 \u00b7 5 V",
+      "anchor_base_servo_pin3": "pin 3 \u00b7 D33 (signal)"
+    },
+    "todo": [
+      "CA-1235 module body (20 x 30 mm) not in the 3D render: size from its pad spacing",
+      "SW1 and slide-switch bodies are typical sizes",
+      "TB6612 fitted in a socket (female headers) assumed",
+      "ESP32 sits in U1/U2 (user, 2026-11-24): moved from the outer layout positions (37.6 mm apart) to 25.4 mm, the DevKit row spacing"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "ultrasonic",
+    "name": "Ultrasonic sensor (HC-SR04)",
+    "file": "models/ultrasonic.glb",
+    "source": "models/ultrasonic.blend",
+    "dimensions_mm": {
+      "w": 39.75,
+      "d": 45,
+      "h": 32.6,
+      "source": "photo",
+      "ref": "Robo Coders ultrasonic carrier PCB top view (user, 2026-11-21), scaled from XH pitch \u00b10.5 mm; HC-SR04 45x20, \u00d816x12 transducers (datasheet)"
+    },
+    "anchors": [
+      "anchor_ultrasonic_pin1",
+      "anchor_ultrasonic_pin2",
+      "anchor_ultrasonic_pin3",
+      "anchor_ultrasonic_pin4",
+      "anchor_ultrasonic_transmitter",
+      "anchor_ultrasonic_receiver",
+      "anchor_ultrasonic_us_pcb"
+    ],
+    "interface": "digital (trigger/echo)",
+    "voltage": "5 V",
+    "pins": {
+      "anchor_ultrasonic_pin1": "GND",
+      "anchor_ultrasonic_pin2": "ECHO",
+      "anchor_ultrasonic_pin3": "TRIG",
+      "anchor_ultrasonic_pin4": "VCC"
+    },
+    "todo": [
+      "HC-SR04 plugged upright into the left socket, facing forward (confirmed by user 2026-11-21)",
+      "transducer spacing 26 mm and back-side parts placeholders"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "dht11",
+    "name": "Temperature and humidity sensor (DHT11)",
+    "file": "models/dht11.glb",
+    "source": "models/dht11.blend",
+    "dimensions_mm": {
+      "w": 31.9,
+      "d": 20.3,
+      "h": 7.7,
+      "source": "photo",
+      "ref": "Robo Coders DHT11 PCB top view + schematic (user, 2026-11-21), scaled from XH pitch \u00b10.5 mm; DHT11 15.5x12x5.5 (Aosong)"
+    },
+    "anchors": [
+      "anchor_dht11_pin3",
+      "anchor_dht11_pin2",
+      "anchor_dht11_pin1",
+      "anchor_dht11_sensor",
+      "anchor_dht11_r_3",
+      "anchor_dht11_r_1",
+      "anchor_dht11_led_power"
+    ],
+    "interface": "digital (single wire)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_dht11_pin3": "DO",
+      "anchor_dht11_pin2": "GND",
+      "anchor_dht11_pin1": "VCC"
+    },
+    "todo": [
+      "DHT11 lies flat over its pads, grille up (confirmed by user 2026-11-21; the silkscreen outline is for an upright part)",
+      "LED1 colour unknown (power LED through R3)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "ldr",
+    "name": "Light sensor (LDR)",
+    "file": "models/ldr.glb",
+    "source": "models/ldr.blend",
+    "dimensions_mm": {
+      "w": 32.4,
+      "d": 20.2,
+      "h": 9.03,
+      "source": "photo",
+      "ref": "Robo Coders A-D sensor board (YUGMINDS layout) top view + schematic (user, 2026-11-21): XH pitch 2.54 mm = 56.25 px -> 22.1 px/mm, \u00b10.5 mm"
+    },
+    "anchors": [
+      "anchor_ldr_pot",
+      "anchor_ldr_led_signal",
+      "anchor_ldr_led_power",
+      "anchor_ldr_pin3",
+      "anchor_ldr_pin2",
+      "anchor_ldr_pin1",
+      "anchor_ldr_lm393",
+      "anchor_ldr_ldr"
+    ],
+    "interface": "digital threshold (DO)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_ldr_pin3": "DO",
+      "anchor_ldr_pin2": "GND",
+      "anchor_ldr_pin1": "VCC"
+    },
+    "todo": [
+      "5 mm LDR (GL5528 style, typical size) soldered upright on the H1 pads like the mic; real part number unknown",
+      "underside parts placed from the schematic only (no bottom view)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "button",
+    "name": "Push button",
+    "file": "models/button.glb",
+    "source": "models/button.blend",
+    "dimensions_mm": {
+      "w": 31.7,
+      "d": 20.3,
+      "h": 7.65,
+      "source": "photo",
+      "ref": "Robo Coders push button PCB top view + schematic (user, 2026-11-21), scaled from XH pitch \u00b10.5 mm; 6x6 tactile switch"
+    },
+    "anchors": [
+      "anchor_button_pin3",
+      "anchor_button_pin2",
+      "anchor_button_pin1",
+      "anchor_button_button",
+      "anchor_button_r_1"
+    ],
+    "interface": "digital",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_button_pin3": "DO",
+      "anchor_button_pin2": "GND",
+      "anchor_button_pin1": "VCC"
+    },
+    "todo": [
+      "tactile switch height 5 mm (6x6x5) assumed from the render"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "touch",
+    "name": "Touch sensor (TTP223)",
+    "file": "models/touch.glb",
+    "source": "models/touch.blend",
+    "dimensions_mm": {
+      "w": 20.4,
+      "d": 30.8,
+      "h": 8.6,
+      "source": "photo",
+      "ref": "Robo Coders touch sensor PCB top view + schematic (user, 2026-11-21), scaled from XH pitch, \u00b10.5 mm"
+    },
+    "anchors": [
+      "anchor_touch_pad",
+      "anchor_touch_pin1",
+      "anchor_touch_pin2",
+      "anchor_touch_pin3",
+      "anchor_touch_led",
+      "anchor_touch_ttp223",
+      "anchor_touch_j1",
+      "anchor_touch_j2"
+    ],
+    "interface": "digital (DO)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_touch_pin1": "VCC",
+      "anchor_touch_pin2": "GND",
+      "anchor_touch_pin3": "DO"
+    },
+    "todo": [
+      "LED1 colour not given in the schematic; yellow assumed from the render",
+      "pad area 19.2x16.3 mm from the silkscreen outline"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "ir",
+    "name": "IR obstacle sensor",
+    "file": "models/ir.glb",
+    "source": "models/ir.blend",
+    "dimensions_mm": {
+      "w": 41.1,
+      "d": 20.2,
+      "h": 9.15,
+      "source": "photo",
+      "ref": "Robo Coders A-D sensor board (YUGMINDS layout) top view + schematic (user, 2026-11-21): XH pitch 2.54 mm = 56.25 px -> 22.1 px/mm, \u00b10.5 mm; IR1/CGQ1 footprints from the IR SENSOR layout"
+    },
+    "anchors": [
+      "anchor_ir_pot",
+      "anchor_ir_led_signal",
+      "anchor_ir_led_power",
+      "anchor_ir_pin3",
+      "anchor_ir_pin2",
+      "anchor_ir_pin1",
+      "anchor_ir_lm393",
+      "anchor_ir_ir_led",
+      "anchor_ir_receiver"
+    ],
+    "interface": "digital threshold (DO)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_ir_pin3": "DO",
+      "anchor_ir_pin2": "GND",
+      "anchor_ir_pin1": "VCC"
+    },
+    "todo": [
+      "5 mm IR LED and phototransistor sizes typical; bent 90\u00b0 forward (user, 2026-11-21), leg length to the bend assumed",
+      "underside parts placed from the schematic only (no bottom view)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "mic",
+    "name": "Microphone (sound) sensor",
+    "file": "models/mic.glb",
+    "source": "models/mic.blend",
+    "dimensions_mm": {
+      "w": 34.05,
+      "d": 20.2,
+      "h": 10.35,
+      "source": "photo",
+      "ref": "Robo Coders A-D sensor board (YUGMINDS layout) top view + schematic (user, 2026-11-21): XH pitch 2.54 mm = 56.25 px -> 22.1 px/mm, \u00b10.5 mm"
+    },
+    "anchors": [
+      "anchor_mic_pot",
+      "anchor_mic_led_signal",
+      "anchor_mic_led_power",
+      "anchor_mic_pin3",
+      "anchor_mic_pin2",
+      "anchor_mic_pin1",
+      "anchor_mic_lm393",
+      "anchor_mic_mic"
+    ],
+    "interface": "digital threshold (DO)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_mic_pin3": "DO",
+      "anchor_mic_pin2": "GND",
+      "anchor_mic_pin1": "VCC"
+    },
+    "todo": [
+      "electret capsule \u00d89.7x6.7 mm (typical size, confirm), soldered upright on the H1 pads, overhangs the left edge",
+      "underside parts placed from the schematic only (no bottom view)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "soil",
+    "name": "Soil moisture sensor",
+    "file": "models/soil.glb",
+    "source": "models/soil.blend",
+    "dimensions_mm": {
+      "w": 99.15,
+      "d": 20.2,
+      "h": 9.15,
+      "source": "photo",
+      "ref": "Robo Coders A-D sensor board (YUGMINDS layout) top view + schematic (user, 2026-11-21): XH pitch 2.54 mm = 56.25 px -> 22.1 px/mm, \u00b10.5 mm; fork probe 19.8 x 39.9 mm"
+    },
+    "anchors": [
+      "anchor_soil_h1",
+      "anchor_soil_pot",
+      "anchor_soil_led_signal",
+      "anchor_soil_led_power",
+      "anchor_soil_pin3",
+      "anchor_soil_pin2",
+      "anchor_soil_pin1",
+      "anchor_soil_lm393",
+      "anchor_soil_probe",
+      "anchor_soil_probe_header"
+    ],
+    "interface": "digital threshold (DO)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_soil_pin3": "DO",
+      "anchor_soil_pin2": "GND",
+      "anchor_soil_pin1": "VCC"
+    },
+    "todo": [
+      "jumper between H1 and the probe is drawn short; the real cable length and type are unknown",
+      "probe header: right-angle 2-pin lying flat, facing the board (user, 2026-11-21)",
+      "underside parts placed from the schematic only"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "rain",
+    "name": "Rain sensor",
+    "file": "models/rain.glb",
+    "source": "models/rain.blend",
+    "dimensions_mm": {
+      "w": 91.5,
+      "d": 26.7,
+      "h": 9.15,
+      "source": "photo",
+      "ref": "Robo Coders A-D sensor board (YUGMINDS layout) top view + schematic (user, 2026-11-21): XH pitch 2.54 mm = 56.25 px -> 22.1 px/mm, \u00b10.5 mm; comb plate 33.2 x 26.7 mm"
+    },
+    "anchors": [
+      "anchor_rain_h1",
+      "anchor_rain_pot",
+      "anchor_rain_led_signal",
+      "anchor_rain_led_power",
+      "anchor_rain_pin3",
+      "anchor_rain_pin2",
+      "anchor_rain_pin1",
+      "anchor_rain_lm393",
+      "anchor_rain_comb",
+      "anchor_rain_plate_h1"
+    ],
+    "interface": "digital threshold (DO)",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_rain_pin3": "DO",
+      "anchor_rain_pin2": "GND",
+      "anchor_rain_pin1": "VCC"
+    },
+    "todo": [
+      "plate size scaled from its 2-pin header only; classic rain plates are larger (54x40), confirm",
+      "jumper between the two H1 sockets is drawn 22 mm long; real cable unknown",
+      "underside parts placed from the schematic only"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "buzzer",
+    "name": "Buzzer module",
+    "file": "models/buzzer.glb",
+    "source": "models/buzzer.blend",
+    "dimensions_mm": {
+      "w": 31.65,
+      "d": 20.0,
+      "h": 11.12,
+      "source": "photo",
+      "ref": "Robo Coders buzzer PCB top view + schematic (user, 2026-11-21), scaled from XH pitch, \u00b10.5 mm"
+    },
+    "anchors": [
+      "anchor_buzzer_pin3",
+      "anchor_buzzer_pin2",
+      "anchor_buzzer_pin1",
+      "anchor_buzzer_buzzer",
+      "anchor_buzzer_transistor",
+      "anchor_buzzer_r_1"
+    ],
+    "interface": "digital / tone",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_buzzer_pin1": "VCC",
+      "anchor_buzzer_pin2": "GND",
+      "anchor_buzzer_pin3": "DI"
+    },
+    "todo": [
+      "buzzer \u00d812x9.5 mm typical; active or passive unknown (lessons play tones, so treated as passive)",
+      "Q2 leg order (B, E up, C down) assumed from the SOT-23 footprint"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "led",
+    "name": "LED module (red / yellow / green)",
+    "file": "models/led.glb",
+    "source": "models/led.blend",
+    "dimensions_mm": {
+      "w": 31.5,
+      "d": 20.0,
+      "h": 11.2,
+      "source": "photo",
+      "ref": "Robo Coders LED module PCB top view + schematic (user, 2026-11-21), scaled from XH pitch, \u00b10.5 mm"
+    },
+    "anchors": [
+      "anchor_led_pin3",
+      "anchor_led_pin2",
+      "anchor_led_pin1",
+      "anchor_led_led",
+      "anchor_led_r_1"
+    ],
+    "interface": "digital / PWM",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_led_pin3": "DI",
+      "anchor_led_pin2": "GND",
+      "anchor_led_pin1": "VCC"
+    },
+    "todo": [
+      "5 mm LED (LED-TH-5mm footprint) fitted upright from the top; lens colour set per module at runtime"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "traffic",
+    "name": "Traffic light module",
+    "file": "models/traffic.glb",
+    "source": "models/traffic.blend",
+    "dimensions_mm": {
+      "w": 31.65,
+      "d": 20.2,
+      "h": 11.2,
+      "source": "photo",
+      "ref": "Robo Coders traffic light PCB top view + schematic (user, 2026-11-21), scaled from XH pitch, \u00b10.5 mm"
+    },
+    "anchors": [
+      "anchor_traffic_pin1",
+      "anchor_traffic_pin2",
+      "anchor_traffic_pin3",
+      "anchor_traffic_pin4",
+      "anchor_traffic_red",
+      "anchor_traffic_yellow",
+      "anchor_traffic_green"
+    ],
+    "interface": "3 \u00d7 digital",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_traffic_pin1": "R",
+      "anchor_traffic_pin2": "Y",
+      "anchor_traffic_pin3": "G",
+      "anchor_traffic_pin4": "GND"
+    },
+    "todo": [
+      "5 mm LEDs assumed (footprint outline is \u00d84.6 mm, could be 3 mm LEDs), colours red/yellow/green left to right assumed from R-Y-G",
+      "no current-limiting resistors on the board (schematic): the GPIO drives each LED directly"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "oled",
+    "name": "OLED display (I2C)",
+    "file": "models/oled.glb",
+    "source": "models/oled.blend",
+    "dimensions_mm": {
+      "w": 40.9,
+      "d": 27.3,
+      "h": 7.65,
+      "source": "photo",
+      "ref": "Robo Coders OLED carrier top view (user, 2026-11-21), scaled from XH pitch \u00b10.5 mm; 0.96\" SSD1306 module typical dims"
+    },
+    "anchors": [
+      "anchor_oled_pin1",
+      "anchor_oled_pin2",
+      "anchor_oled_pin3",
+      "anchor_oled_pin4",
+      "anchor_oled_screen",
+      "anchor_oled_header"
+    ],
+    "interface": "I2C",
+    "voltage": "3.3\u20135 V",
+    "pins": {
+      "anchor_oled_pin1": "SDA",
+      "anchor_oled_pin2": "SCL",
+      "anchor_oled_pin3": "VCC",
+      "anchor_oled_pin4": "GND"
+    },
+    "todo": [
+      "0.96\" module sizes (27.8x27.3, glass 19.3x26.7, active 10.9x21.7) are typical values, confirm",
+      "header spacer height 2.5 mm assumed",
+      "display colour (white, blue or yellow/blue) unknown: white-blue used"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "gas",
+    "name": "Gas sensor (MQ-2)",
+    "file": "models/gas.glb",
+    "source": "models/gas.blend",
+    "dimensions_mm": {
+      "w": 46,
+      "d": 33,
+      "h": 18.79,
+      "source": "photo",
+      "ref": "Robo Coders gas sensor PCB top view + schematic (user, 2026-11-21), scaled from XH pitch, \u00b11 mm"
+    },
+    "anchors": [
+      "anchor_gas_element",
+      "anchor_gas_mq_base",
+      "anchor_gas_pot",
+      "anchor_gas_led_signal",
+      "anchor_gas_led_power",
+      "anchor_gas_pin3",
+      "anchor_gas_pin2",
+      "anchor_gas_pin1",
+      "anchor_gas_lm393"
+    ],
+    "interface": "analog (AO) + digital threshold (DO)",
+    "voltage": "5 V (heater), TODO confirm",
+    "pins": {
+      "anchor_gas_pin3": "DO",
+      "anchor_gas_pin2": "GND",
+      "anchor_gas_pin1": "VCC"
+    },
+    "todo": [
+      "MQ-2 body \u00d820 x 15.5 mm from typical datasheet values, confirm",
+      "board 44x33 mm scaled from the layout image",
+      "underside parts placed from the schematic only (no bottom view)",
+      "AO not on the connector: schematic routes only DO to U13"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "servo",
+    "name": "Servo (SG90 micro servo)",
+    "file": "models/servo.glb",
+    "source": "models/servo.blend",
+    "dimensions_mm": {
+      "w": 81.4,
+      "d": 12.2,
+      "h": 30.9,
+      "source": "datasheet",
+      "ref": "TowerPro SG90: case 22.8x12.2x22.7, tabs 32 overall at 15.6 mm, top of shaft ~29 mm (Kjell / Rapid datasheets, \u00b10.6 mm); photos from the user"
+    },
+    "anchors": [
+      "anchor_servo_horn",
+      "anchor_servo_lead_gnd",
+      "anchor_servo_lead_vcc",
+      "anchor_servo_lead_signal",
+      "anchor_servo_gnd",
+      "anchor_servo_vcc",
+      "anchor_servo_signal"
+    ],
+    "interface": "PWM",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_servo_gnd": "GND \u00b7 brown",
+      "anchor_servo_vcc": "VCC 5 V \u00b7 red",
+      "anchor_servo_signal": "Signal \u00b7 orange"
+    },
+    "todo": [
+      "lead drawn 40 mm (real SG90 lead ~25 cm)",
+      "internal gears and motor are illustrative, sizes not measured"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "battery",
+    "name": "Battery pack (2-cell)",
+    "file": "models/battery.glb",
+    "source": "models/battery.blend",
+    "dimensions_mm": {
+      "w": 20,
+      "d": 37.6,
+      "h": 10,
+      "source": "TODO",
+      "ref": "shrink-wrapped 2-cell pack from the user reference drawing; 10440 cells assumed for size"
+    },
+    "anchors": [
+      "anchor_battery_cells",
+      "anchor_battery_positive",
+      "anchor_battery_negative"
+    ],
+    "interface": "power",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_battery_positive": "BAT + \u00b7 red",
+      "anchor_battery_negative": "BAT \u2212 \u00b7 black"
+    },
+    "todo": [
+      "cell type and size unconfirmed (10440 assumed)",
+      "series/parallel unconfirmed",
+      "where the 2-pin cable plugs into the pack is not modelled (TODO: socket or wire ends?)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "tt_motor",
+    "name": "TT gear motor",
+    "file": "models/tt_motor.glb",
+    "source": "models/tt_motor.blend",
+    "dimensions_mm": {
+      "w": 74.4,
+      "d": 37.8,
+      "h": 23.85,
+      "source": "listing",
+      "ref": "TT motor 70 x 22 x 18 mm (listings); gearbox 37 x 18.8 x 22.5, shaft \u00d85.4 with flats 3.7 apart, holes 2 x \u00d83 17.5 apart 20 mm behind the shaft"
+    },
+    "anchors": [
+      "anchor_tt_motor_shaft",
+      "anchor_tt_motor_motor",
+      "anchor_tt_motor_terminal_1",
+      "anchor_tt_motor_terminal_2"
+    ],
+    "interface": "DC motor",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_tt_motor_terminal_1": "Motor terminal 1",
+      "anchor_tt_motor_terminal_2": "Motor terminal 2"
+    },
+    "todo": [
+      "ear, collar and end-cap sizes from photos",
+      "wires not modelled (the site draws the cables)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "wheel",
+    "name": "Wheel (65 mm, TT motor)",
+    "file": "models/wheel.glb",
+    "source": "models/wheel.blend",
+    "dimensions_mm": {
+      "w": 65.0,
+      "d": 26,
+      "h": 65.0,
+      "source": "photo",
+      "ref": "common TT-motor wheel, 65 x 26 mm; shape from the chassis photo"
+    },
+    "anchors": [
+      "anchor_wheel_tread",
+      "anchor_wheel_hub"
+    ],
+    "interface": "mechanical",
+    "voltage": "TODO",
+    "pins": {},
+    "todo": [
+      "diameter and width assumed (65 x 26 mm)",
+      "tread blocks and star arms simplified from the photo"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "chassis",
+    "name": "4WD robot chassis",
+    "file": "models/chassis.glb",
+    "source": "models/chassis.blend",
+    "dimensions_mm": {
+      "w": 255,
+      "d": 148,
+      "h": 41.0,
+      "source": "listing",
+      "ref": "common 4WD smart-car chassis kit: plates 255 x 148 mm (seller listings), car ~256 x 155 x 66 mm; TT motor 70 x 22 x 18; wheels 65 x 26"
+    },
+    "anchors": [
+      "anchor_chassis_motor_mount_fl",
+      "anchor_chassis_bracket_fl_out",
+      "anchor_chassis_bracket_fl_in",
+      "anchor_chassis_bolt_fl_1",
+      "anchor_chassis_nut_fl_1",
+      "anchor_chassis_bolt_fl_2",
+      "anchor_chassis_nut_fl_2",
+      "anchor_chassis_axle_fl",
+      "anchor_chassis_motor_fl",
+      "anchor_chassis_motor_mount_fr",
+      "anchor_chassis_bracket_fr_out",
+      "anchor_chassis_bracket_fr_in",
+      "anchor_chassis_bolt_fr_1",
+      "anchor_chassis_nut_fr_1",
+      "anchor_chassis_bolt_fr_2",
+      "anchor_chassis_nut_fr_2",
+      "anchor_chassis_axle_fr",
+      "anchor_chassis_motor_fr",
+      "anchor_chassis_motor_mount_rl",
+      "anchor_chassis_bracket_rl_out",
+      "anchor_chassis_bracket_rl_in",
+      "anchor_chassis_bolt_rl_1",
+      "anchor_chassis_nut_rl_1",
+      "anchor_chassis_bolt_rl_2",
+      "anchor_chassis_nut_rl_2",
+      "anchor_chassis_axle_rl",
+      "anchor_chassis_motor_rl",
+      "anchor_chassis_motor_mount_rr",
+      "anchor_chassis_bracket_rr_out",
+      "anchor_chassis_bracket_rr_in",
+      "anchor_chassis_bolt_rr_1",
+      "anchor_chassis_nut_rr_1",
+      "anchor_chassis_bolt_rr_2",
+      "anchor_chassis_nut_rr_2",
+      "anchor_chassis_axle_rr",
+      "anchor_chassis_motor_rr",
+      "anchor_chassis_mount"
+    ],
+    "interface": "mechanical",
+    "voltage": "TODO",
+    "pins": {},
+    "todo": [
+      "motors are tt_motor.glb and wheels are wheel.glb, mounted on the motor_mount / axle anchors by the site",
+      "plate thickness 3 mm assumed (listings say 2-5 mm)",
+      "cut-out positions drawn from product photos, not a drawing",
+      "fixing-piece shape approximate; TT holes 17.5 mm apart, 20 mm behind the shaft",
+      "standoffs 30 mm (some kits ship 40 mm)"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "jr_board",
+    "name": "Jr. Explorer board",
+    "file": "models/jr_board.glb",
+    "source": "models/jr_board.blend",
+    "dimensions_mm": {
+      "w": 82.71,
+      "d": 50.7,
+      "h": 12.6,
+      "source": "photo",
+      "ref": "JR. EXPLORER KIT PCB top view, 3D render and schematic (user, 2026-11-22), scaled from the XH pitch \u00b10.5 mm"
+    },
+    "anchors": [
+      "anchor_jr_board_op1_pin1",
+      "anchor_jr_board_op1_pin2",
+      "anchor_jr_board_op1_pin3",
+      "anchor_jr_board_op2_pin1",
+      "anchor_jr_board_op2_pin2",
+      "anchor_jr_board_op2_pin3",
+      "anchor_jr_board_op3_pin1",
+      "anchor_jr_board_op3_pin2",
+      "anchor_jr_board_op3_pin3",
+      "anchor_jr_board_op4_pin1",
+      "anchor_jr_board_op4_pin2",
+      "anchor_jr_board_op4_pin3",
+      "anchor_jr_board_ip1_pin1",
+      "anchor_jr_board_ip1_pin2",
+      "anchor_jr_board_ip1_pin3",
+      "anchor_jr_board_ip2_pin1",
+      "anchor_jr_board_ip2_pin2",
+      "anchor_jr_board_ip2_pin3",
+      "anchor_jr_board_ip3_pin1",
+      "anchor_jr_board_ip3_pin2",
+      "anchor_jr_board_ip3_pin3",
+      "anchor_jr_board_ip4_pin1",
+      "anchor_jr_board_ip4_pin2",
+      "anchor_jr_board_ip4_pin3",
+      "anchor_jr_board_led1",
+      "anchor_jr_board_led2",
+      "anchor_jr_board_led3",
+      "anchor_jr_board_led4",
+      "anchor_jr_board_cn1_pin1",
+      "anchor_jr_board_cn1_pin2",
+      "anchor_jr_board_cn2_pin1",
+      "anchor_jr_board_cn2_pin2",
+      "anchor_jr_board_cn3_pin1",
+      "anchor_jr_board_cn3_pin2",
+      "anchor_jr_board_u1",
+      "anchor_jr_board_c3",
+      "anchor_jr_board_u2",
+      "anchor_jr_board_sw1",
+      "anchor_jr_board_u3",
+      "anchor_jr_board_c1",
+      "anchor_jr_board_c2",
+      "anchor_jr_board_r2",
+      "anchor_jr_board_pled",
+      "anchor_jr_board_r1",
+      "anchor_jr_board_c4",
+      "anchor_jr_board_c5"
+    ],
+    "interface": "non-programmable (L293D)",
+    "voltage": "7\u201312 V in, 5 V regulated",
+    "pins": {
+      "anchor_jr_board_op1_pin1": "5 V",
+      "anchor_jr_board_op1_pin2": "GND",
+      "anchor_jr_board_op1_pin3": "OP1 \u2190 L293D output 1",
+      "anchor_jr_board_op2_pin1": "5 V",
+      "anchor_jr_board_op2_pin2": "GND",
+      "anchor_jr_board_op2_pin3": "OP2 \u2190 L293D output 2",
+      "anchor_jr_board_op3_pin1": "5 V",
+      "anchor_jr_board_op3_pin2": "GND",
+      "anchor_jr_board_op3_pin3": "OP3 \u2190 L293D output 3",
+      "anchor_jr_board_op4_pin1": "5 V",
+      "anchor_jr_board_op4_pin2": "GND",
+      "anchor_jr_board_op4_pin3": "OP4 \u2190 L293D output 4",
+      "anchor_jr_board_ip1_pin1": "5 V",
+      "anchor_jr_board_ip1_pin2": "GND",
+      "anchor_jr_board_ip1_pin3": "IP1 signal \u2192 L293D input 1",
+      "anchor_jr_board_ip2_pin1": "5 V",
+      "anchor_jr_board_ip2_pin2": "GND",
+      "anchor_jr_board_ip2_pin3": "IP2 signal \u2192 L293D input 2",
+      "anchor_jr_board_ip3_pin1": "5 V",
+      "anchor_jr_board_ip3_pin2": "GND",
+      "anchor_jr_board_ip3_pin3": "IP3 signal \u2192 L293D input 3",
+      "anchor_jr_board_ip4_pin1": "5 V",
+      "anchor_jr_board_ip4_pin2": "GND",
+      "anchor_jr_board_ip4_pin3": "IP4 signal \u2192 L293D input 4",
+      "anchor_jr_board_cn1_pin1": "Motor B \u00b7 OP3",
+      "anchor_jr_board_cn1_pin2": "Motor B \u00b7 OP4",
+      "anchor_jr_board_cn2_pin1": "Motor A \u00b7 OP1",
+      "anchor_jr_board_cn2_pin2": "Motor A \u00b7 OP2",
+      "anchor_jr_board_cn3_pin1": "Battery +",
+      "anchor_jr_board_cn3_pin2": "Battery \u2212"
+    },
+    "todo": [
+      "L293D ENABLE1/2 assumed tied high (always on); schematic image is too small to read those nets",
+      "IPn -> INPUTn mapping read from net labels: confirm IP1..IP4 -> L293D pins 2, 7, 10, 15",
+      "DC jack, SW1 and C3 sizes are typical"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "jst2",
+    "name": "2-pin JST cable",
+    "file": "models/jst2.glb",
+    "source": "models/jst2.blend",
+    "dimensions_mm": {
+      "w": 119.0,
+      "d": 15.47,
+      "h": 5.5,
+      "source": "datasheet",
+      "ref": "JST XH series: 2.5 mm pitch, XHP housing width = 2.5 x (pins - 1) + 4.9 mm (JST XH catalogue); housing length and height typical"
+    },
+    "anchors": [
+      "anchor_jst2_plug_a",
+      "anchor_jst2_a_pin1",
+      "anchor_jst2_a_pin2",
+      "anchor_jst2_plug_b",
+      "anchor_jst2_b_pin1",
+      "anchor_jst2_b_pin2",
+      "anchor_jst2_wires"
+    ],
+    "interface": "cable",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_jst2_a_pin1": "Pin 1: black wire, straight through to pin 1 at the other end",
+      "anchor_jst2_a_pin2": "Pin 2: red wire, straight through to pin 2 at the other end",
+      "anchor_jst2_b_pin1": "Pin 1: black wire, straight through to pin 1 at the other end",
+      "anchor_jst2_b_pin2": "Pin 2: red wire, straight through to pin 2 at the other end"
+    },
+    "todo": [
+      "cable drawn 100 mm between the plugs: real length TODO (kit cables often 20 cm)",
+      "wire colours follow the lesson drawings; confirm the kit cables"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "jst3",
+    "name": "3-pin JST cable",
+    "file": "models/jst3.glb",
+    "source": "models/jst3.blend",
+    "dimensions_mm": {
+      "w": 119.0,
+      "d": 17.49,
+      "h": 5.5,
+      "source": "datasheet",
+      "ref": "JST XH series: 2.5 mm pitch, XHP housing width = 2.5 x (pins - 1) + 4.9 mm (JST XH catalogue); housing length and height typical"
+    },
+    "anchors": [
+      "anchor_jst3_plug_a",
+      "anchor_jst3_a_pin1",
+      "anchor_jst3_a_pin2",
+      "anchor_jst3_a_pin3",
+      "anchor_jst3_plug_b",
+      "anchor_jst3_b_pin1",
+      "anchor_jst3_b_pin2",
+      "anchor_jst3_b_pin3",
+      "anchor_jst3_wires"
+    ],
+    "interface": "cable",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_jst3_a_pin1": "Pin 1: black wire, straight through to pin 1 at the other end",
+      "anchor_jst3_a_pin2": "Pin 2: red wire, straight through to pin 2 at the other end",
+      "anchor_jst3_a_pin3": "Pin 3: orange wire, straight through to pin 3 at the other end",
+      "anchor_jst3_b_pin1": "Pin 1: black wire, straight through to pin 1 at the other end",
+      "anchor_jst3_b_pin2": "Pin 2: red wire, straight through to pin 2 at the other end",
+      "anchor_jst3_b_pin3": "Pin 3: orange wire, straight through to pin 3 at the other end"
+    },
+    "todo": [
+      "cable drawn 100 mm between the plugs: real length TODO (kit cables often 20 cm)",
+      "wire colours follow the lesson drawings; confirm the kit cables"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "jst4",
+    "name": "4-pin JST cable",
+    "file": "models/jst4.glb",
+    "source": "models/jst4.blend",
+    "dimensions_mm": {
+      "w": 119.0,
+      "d": 19.51,
+      "h": 5.5,
+      "source": "datasheet",
+      "ref": "JST XH series: 2.5 mm pitch, XHP housing width = 2.5 x (pins - 1) + 4.9 mm (JST XH catalogue); housing length and height typical"
+    },
+    "anchors": [
+      "anchor_jst4_plug_a",
+      "anchor_jst4_a_pin1",
+      "anchor_jst4_a_pin2",
+      "anchor_jst4_a_pin3",
+      "anchor_jst4_a_pin4",
+      "anchor_jst4_plug_b",
+      "anchor_jst4_b_pin1",
+      "anchor_jst4_b_pin2",
+      "anchor_jst4_b_pin3",
+      "anchor_jst4_b_pin4",
+      "anchor_jst4_wires"
+    ],
+    "interface": "cable",
+    "voltage": "TODO",
+    "pins": {
+      "anchor_jst4_a_pin1": "Pin 1: black wire, straight through to pin 1 at the other end",
+      "anchor_jst4_a_pin2": "Pin 2: red wire, straight through to pin 2 at the other end",
+      "anchor_jst4_a_pin3": "Pin 3: orange wire, straight through to pin 3 at the other end",
+      "anchor_jst4_a_pin4": "Pin 4: yellow wire, straight through to pin 4 at the other end",
+      "anchor_jst4_b_pin1": "Pin 1: black wire, straight through to pin 1 at the other end",
+      "anchor_jst4_b_pin2": "Pin 2: red wire, straight through to pin 2 at the other end",
+      "anchor_jst4_b_pin3": "Pin 3: orange wire, straight through to pin 3 at the other end",
+      "anchor_jst4_b_pin4": "Pin 4: yellow wire, straight through to pin 4 at the other end"
+    },
+    "todo": [
+      "cable drawn 100 mm between the plugs: real length TODO (kit cables often 20 cm)",
+      "wire colours follow the lesson drawings; confirm the kit cables"
+    ],
+    "status": "draft"
+  },
+  {
+    "id": "cat",
+    "name": "Cat sprite",
+    "file": "models/cat.glb",
+    "source": "models/cat.blend",
+    "dimensions_mm": {
+      "w": 134.88,
+      "d": 52.91,
+      "h": 111,
+      "source": "design",
+      "ref": "original cartoon cat for the Scratch lessons; one Scratch step = 1 mm"
+    },
+    "anchors": [
+      "anchor_cat_head",
+      "anchor_cat_body"
+    ],
+    "interface": "Scratch sprite",
+    "voltage": "TODO",
+    "pins": {},
+    "todo": [
+      "design approval: an original cat, not the Scratch Cat"
+    ],
+    "status": "draft"
+  }
+]

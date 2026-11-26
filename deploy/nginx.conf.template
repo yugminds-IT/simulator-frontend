@@ -1,0 +1,24 @@
+# nginx's image fills ${API_URL} from the environment at start (envsubst on /etc/nginx/templates).
+server {
+  listen 80;
+  root /usr/share/nginx/html;
+  client_max_body_size 1m;
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml model/gltf-binary;
+
+  # the backend: same origin for the browser, so the httpOnly cookie just works
+  location /api/ {
+    proxy_pass ${API_URL};
+    proxy_ssl_server_name on;
+    proxy_set_header Host $proxy_host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  # hashed build files never change; models change on redeploy, so revalidate them
+  location /assets/ { add_header Cache-Control "public, max-age=31536000, immutable"; try_files $uri =404; }
+  location /models/ { add_header Cache-Control "no-cache"; try_files $uri =404; }
+
+  # hash routes (#/...) all load index.html
+  location / { add_header Cache-Control "no-cache"; try_files $uri $uri/ /index.html; }
+}
