@@ -297,10 +297,10 @@ tr[data-anchor]:hover { background: var(--blue-soft); cursor: default; }
 .cards .snum { display: inline-block; margin-right: 6px; padding: 0 7px; border-radius: 999px; background: #fbbf24; font-style: normal; }
 .cards .tick { display: block; font: 500 12px var(--mono); color: var(--muted); letter-spacing: 0; text-transform: none; }
 
-.stage:has(#build-head:not([hidden])) #tags.pills .tag b { font-size: 13px; } .stage:has(#build-head:not([hidden])) #tags.pills .tag { padding: 3px 9px 3px 8px; }
+.stage:has(#build-head:not([hidden])) #tags.pills .tag:not(.below) b { font-size: 13px; } .stage:has(#build-head:not([hidden])) #tags.pills .tag:not(.below) { padding: 3px 9px 3px 8px; }
 
-#tags.pills .tag.below { right: auto; padding: 2px 9px; border-radius: 7px; box-shadow: 0 3px 8px -5px rgba(11, 27, 58, .5); }
-#tags.pills .tag.below b { font-size: 12.5px; gap: 0; } #tags.pills .tag.below b::before { display: none; }
+#tags.pills .tag.below { right: auto; font-size: var(--pill, 12.5px); padding: .16em .72em; border-radius: .56em; box-shadow: 0 3px 8px -5px rgba(11, 27, 58, .5); } /* --pill: sized with the mat (stage.js) */
+#tags.pills .tag.below b { font-size: 1em; gap: 0; } #tags.pills .tag.below b::before { display: none; }
 #tags.pills .tag.hot { background: #fbbf24; border-color: #f59e0b; }
 
 /* build: part detail page (panel) + BOM isolate eye */

@@ -4,12 +4,12 @@
 // camera glides over, they arc across) → assemble (they settle into place; cables grow to their ports).
 // The last step drives the finished robot (D-pad / keys / Auto using the ultrasonic distance).
 import * as THREE from 'three';
-import { PARTS as KIT_PARTS } from './kit.js';
+import { PARTS as KIT_PARTS, partGroup } from './kit.js';
 import { COURSE_OF } from './arena.js';
 
 const MM = 0.001;
 const B = (x, y, z = 0) => new THREE.Vector3(x * MM, z * MM, -y * MM); // Blender mm (X right/front, Y back/left, Z up) → three metres
-const PM = { w: 1000, d: 640, cx: -330 }; // parts mat (mm), centre x on the desk
+const PM = { w: 1000, d: 730, cx: -330 }; // parts mat (mm), centre x on the desk
 const AM = { w: 600, d: 440, cx: 520 };   // assembly mat
 const ROBOT_AT = B(AM.cx, 0);
 const GATHER = 2.2;                        // seconds spent on the desk before the parts lift off
@@ -136,47 +136,57 @@ const SPEC = {
 };
 const R90X = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2); // lie a vertical part flat
 const PART_DEFS = [
-  { id: 'deck_bottom', label: 'Bottom deck', step: 1, delay: 0, nodes: ['chassis_plate_bottom'], bench: [-360, 220], spec: 'deck_bottom', info: 'The lower acrylic plate. The four motors hang underneath it.' },
+  { id: 'deck_bottom', label: 'Bottom deck', step: 1, delay: 0, nodes: ['chassis_plate_bottom'], bench: [-344.5, 238], spec: 'deck_bottom', info: 'The lower acrylic plate. The four motors hang underneath it.' },
   ...MOTORS.map((m, i) => ({ id: `motor_${m}`, label: 'TT motor', group: '4× TT motor', step: 1, delay: 1.2 + i * 0.25, touch: ['deck_bottom'],
     motor: m, spec: 'motor',
-    bench: [-440, [125, 90, 55, 20][i]], approach: [0, 0, 40], info: 'DC motor with a 1:48 gearbox. It stands on the bottom deck, gearbox at the corner, and its shaft turns the wheel.' })),
+    bench: [190, [290.5, 255.5, 220.5, 185.5][i]], approach: [0, 0, 40], info: 'DC motor with a 1:48 gearbox. It stands on the bottom deck, gearbox at the corner, and its shaft turns the wheel.' })),
   ...MOTORS.flatMap((m, i) => ['out', 'in'].map((side, k) => { const sy = m[1] === 'l' ? 1 : -1; return { id: `bracket_${m}_${side}`, label: 'Motor bracket', group: '8× motor bracket', step: 1,
-    delay: 3.9 + (i * 2 + k) * 0.12, touch: ['deck_bottom', `motor_${m}`], nodes: [`chassis_bracket_${m}_${side}`], benchQ: R90X, bench: [[-372, -334][k], [128, 92, 56, 20][i]],
+    delay: 3.9 + (i * 2 + k) * 0.12, touch: ['deck_bottom', `motor_${m}`], nodes: [`chassis_bracket_${m}_${side}`], benchQ: R90X, bench: [[79, 117][k], [292, 256, 220, 184][i]],
     approach: [0, 0, -40], hover: [0, sy * 75, -12], explode: [0, side === 'out' ? sy * 30 : -sy * 15, 0], spec: 'bracket',
     info: 'A T-shaped piece of acrylic, used upside down. It is pushed up from under the deck: the upright plate comes through a slot (inside the motor) or a notch (deck edge) and stands against the gearbox, while the crossbar stays underneath so it can’t pull through. Two M3 × 30 bolts pass through both brackets and the gearbox.' }; })),
   ...MOTORS.map((m, i) => ({ id: `wheel_${m}`, label: 'Wheel', group: '4× wheel, 65 mm', step: 1, delay: 10.6 + i * 0.3, wheel: m, spec: 'wheel', touch: [`motor_${m}`],
-    bench: [[-255, 100], [-180, 100], [-255, 28], [-180, 28]][i], approach: [0, m[1] === 'l' ? 45 : -45, 0], info: '65 mm rubber tyre on a 5-spoke rim; pushes onto the TT shaft.' })),
+    bench: [[324.5, 274], [399.5, 274], [324.5, 202], [399.5, 202]][i], approach: [0, m[1] === 'l' ? 45 : -45, 0], info: '65 mm rubber tyre on a 5-spoke rim; pushes onto the TT shaft.' })),
   ...[1, 2, 3, 4, 5, 6].map((n, i) => ({ id: `standoff_${n}`, label: 'Brass standoff, M3 × 30', group: '6× standoff 30', step: 2, delay: i * 0.18, spin: 'y', spec: 'standoff', touch: ['deck_bottom'],
     nodes: [`chassis_standoff_${n}`], benchQ: R90X, tray: true, bench: [42.5 + i * 6.2, 220], approach: [0, 0, 45],
     info: 'Hexagonal brass spacer, male–female: a threaded stud at the bottom and a threaded hole at the top. The stud goes down through the bottom deck and takes a nut; the top deck is screwed onto it. Six of them hold the decks 30 mm apart, clear of the motors.' })),
-  { id: 'deck_top', label: 'Top deck', step: 2, delay: 2.6, touch: [1, 2, 3, 4, 5, 6].map((n) => `standoff_${n}`), nodes: ['chassis_plate_top'], bench: [-100, 220], approach: [0, 0, 70], spec: 'deck_top', info: 'The upper acrylic plate. The base board sits on it.' },
-  { id: 'base', label: 'Base board + ESP32 + TB6612', step: 3, delay: 1.6, touch: ['bstand_1', 'bstand_2', 'bstand_3', 'bstand_4'], model: 'base', bench: [-40, 65], approach: [0, 0, 70], spec: 'base', info: 'Robo Coders base board with the ESP32 DevKit and the TB6612 motor driver fitted in their sockets.' },
-  { id: 'ultrasonic', label: 'HC-SR04 sensor', step: 4, touch: ['deck_top'], model: 'ultrasonic', bench: [245, 65], approach: [40, 0, 30], spec: 'ultrasonic', info: 'Ultrasonic distance sensor: the robot’s eye.' },
-  { id: 'battery', label: 'Battery pack', step: 5, touch: ['deck_top'], model: 'battery', bench: [115, 65], approach: [0, 0, 60], spec: 'battery', info: '2-cell battery pack with a 2-pin plug for BAT.' },
-  { id: 'usb', label: 'USB cable', step: 7, usb: true, bench: [340, 65], spec: 'usb', info: 'Uploads the sketch and powers the ESP32 while programming.' },
+  { id: 'deck_top', label: 'Top deck', step: 2, delay: 2.6, touch: [1, 2, 3, 4, 5, 6].map((n) => `standoff_${n}`), nodes: ['chassis_plate_top'], bench: [-75.5, 238], approach: [0, 0, 70], spec: 'deck_top', info: 'The upper acrylic plate. The base board sits on it.' },
+  { id: 'base', label: 'Base board + ESP32 + TB6612', short: 'Base board', step: 3, delay: 1.6, touch: ['bstand_1', 'bstand_2', 'bstand_3', 'bstand_4'], model: 'base', bench: [-409, 1], approach: [0, 0, 70], spec: 'base', info: 'Robo Coders base board with the ESP32 DevKit and the TB6612 motor driver fitted in their sockets.' },
+  { id: 'ultrasonic', label: 'HC-SR04 sensor', step: 4, touch: ['deck_top'], model: 'ultrasonic', bench: [106, -195], approach: [40, 0, 30], spec: 'ultrasonic', info: 'Ultrasonic distance sensor: the robot’s eye.' },
+  { id: 'battery', label: 'Battery pack', step: 5, touch: ['deck_top'], model: 'battery', bench: [458, 238], approach: [0, 0, 60], spec: 'battery', info: '2-cell battery pack with a 2-pin plug for BAT.' },
+  { id: 'usb', label: 'USB cable', step: 7, usb: true, bench: [-40, 1], spec: 'usb', info: 'Uploads the sketch and powers the ESP32 while programming.' },
 ];
-// kit modules: [id, tint, label], one row per kind (outputs, digital inputs, servo + analog sensors) across the lower part of the parts mat
-const MODULE_ROWS = [
-  [['led', 'red', 'LED · red'], ['led', 'yellow', 'LED · yellow'], ['led', 'green', 'LED · green'], ['buzzer'], ['traffic'], ['oled']],
-  [['button'], ['touch'], ['ir'], ['mic'], ['ldr'], ['dht11']],
-  [['gas'], ['servo'], ['soil'], ['rain']],
+// The parts mat is sorted into printed zones, the same groups (and colours) as the Components list and the kit box:
+// robot body + power & motion at the back, brain, cables and outputs in the middle, inputs and the hardware tray at the front.
+// Zones: [name, PART_GROUPS index (chip colour), x0, x1, y0 (front), y1 (back)] in parts-mat mm, y towards the back.
+// Each zone leaves room under its items for their name labels (about 30 mm at the default view).
+const MAT_ZONES = [['Robot body', 5, -484, 138, 112, 334], ['Power & motion', 4, 152, 484, 112, 334],
+  ['Brain', 0, -484, -334, -128, 98], ['Cables', 1, -320, 16, -128, 98], ['Output', 3, 30, 484, -128, 98],
+  ['Input', 2, -484, 214, -357, -142], ['Hardware', 5, 228, 484, -357, -142]];
+const TRAY = [356, -203]; // hardware tray centre on the parts mat
+// kit modules: [id, tint, label, x, y] (bbox centre, parts-mat mm). The kit has two IR (line following) and two LDR (light seeking):
+// a pair lies side by side and shares one label. HC-SR04 (-> 106, -195) sits in the input row too; it is a robot part, placed in PARTS.
+const MODULES = [
+  ['led', 'red', 'LED · red', 99, 54], ['led', 'yellow', 'LED · yellow', 178, 54], ['led', 'green', 'LED · green', 257, 54], ['buzzer', null, null, 336, 54], ['traffic', null, null, 415, 54],
+  ['oled', null, null, 145, -40], ['servo', null, null, 335, -40],
+  ['button', null, null, -442.5, -195], ['touch', null, null, -376.5, -195], ['ldr', null, null, -309.5, -195], ['ldr', null, null, -232.5, -195], ['mic', null, null, -152, -195],
+  ['ir', null, null, -63, -195], ['ir', null, null, 31, -195], ['dht11', null, null, 172, -195],
+  ['gas', null, null, -339.5, -292], ['soil', null, null, -180.5, -292], ['rain', null, null, 24, -292],
 ];
-const MODULE_ROW_Y = [-60, -165, -270]; // mm on the parts mat
 const MODULE_SCALE = 2;                 // ponytail: drawn 2x so 30 mm boards read on a 1 m mat; real sizes are in each card
-const MODULE_GAP = 50;                  // mm between modules in a row (at mat scale)
 const MOD_LABEL = { buzzer: 'Buzzer', button: 'Push button', touch: 'Touch sensor', ir: 'IR sensor', mic: 'Mic sensor', ldr: 'LDR sensor', dht11: 'DHT11',
   traffic: 'Traffic light', oled: 'OLED display', gas: 'Gas sensor', servo: 'Servo', soil: 'Soil moisture', rain: 'Rain sensor' };
 const LED_BODY = { red: 0xd42a1a, yellow: 0xe8b818, green: 0x1fae44 };
 // cable stock bundles: [pins, count, x on the parts mat, used by step, how many it uses]
-const CABLE_STOCK = [[2, 5, 320, 6, 4], [3, 4, 395, null, 0], [4, 3, 460, 4, 1]];
+const CABLE_STOCK = [[2, 5, -275, 6, 4], [3, 4, -190, null, 0], [4, 3, -105, 4, 1]];
 const WIRE_COLORS = { 2: [0xd63a1f, 0x1c1c1c], 3: [0x1c1c1c, 0xd63a1f, 0xe8781c], 4: [0x1c1c1c, 0xd63a1f, 0xe8781c, 0xe9b81c] };
 
 // ---------------------------------------------------------------------------------------------
 export async function createBuild({ stage, getModel, url, project = null }) {
   const STEPS = stepsFor(project), hasUs = !project || project === 'obstacle';
+  const matZones = MAT_ZONES.filter(([n]) => !project || (n !== 'Output' && (n !== 'Input' || SENSOR_MODEL[project] || hasUs))); // a project's mat: only zones it has parts in
   const sx = (n) => STEPS.findIndex((s) => (s.base || s.id) === STEP_IDS[n]); // full-guide step number → this build's (-1: not in it)
   const world = new THREE.Group(), robot = new THREE.Group(), desk = new THREE.Group(), deco = new THREE.Group();
-  world.add(makeDesk(), makeMat(PM, 'PARTS MAT', true), makeMat(AM, 'ASSEMBLY MAT', false), desk, deco, robot);
+  world.add(makeDesk(), makeMat(PM, 'PARTS MAT', true, matZones), makeMat(AM, 'ASSEMBLY MAT', false), desk, deco, robot);
   const wp = (o) => o.getWorldPosition(new THREE.Vector3());
   const A = (root, n) => wp(root.getObjectByName(n));
   const load = async (id) => (await getModel(url(id))).clone(true);
@@ -269,7 +279,7 @@ export async function createBuild({ stage, getModel, url, project = null }) {
       // line: flat under the bottom deck, LEDs 12 mm past the front edge; button: flat on the top deck's free rear corner, beside the battery
       m.position.set(line ? 140 * MM - b.max.x : -95 * MM - c.x, line ? deckUnder - b.max.y : top.y - b.min.y, z * MM - c.z);
       sensorDefs.push({ id: `sensor_${k + 1}`, label: line ? `IR sensor · ${k ? 'right (D35)' : 'left (D36)'}` : 'Push button', group: line ? '2× IR sensor' : undefined, step: 4, delay: k * 0.35,
-        touch: [line ? 'deck_bottom' : 'deck_top'], obj: m, benchQ: m.quaternion.clone().invert(), bench: line ? [[228, 65], [268, 65]][k] : [245, 65], approach: line ? [0, 0, -40] : [0, 0, 40],
+        touch: [line ? 'deck_bottom' : 'deck_top'], obj: m, benchQ: m.quaternion.clone().invert(), bench: line ? [[-63, -195], [31, -195]][k] : [-442.5, -195], approach: line ? [0, 0, -40] : [0, 0, 40],
         spec: id, info: line ? 'Looks down at the floor: reads 1 over the black tape.' : 'Hold it to drive forward; let go to stop.', port: line ? ['d36', 'd35'][k] : 'd35' });
     });
   }
@@ -294,7 +304,7 @@ export async function createBuild({ stage, getModel, url, project = null }) {
       : d.id === 'battery' ? new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2).multiply(home.q) : home.q.clone();
     pivot.quaternion.copy(benchQ); pivot.position.set(0, 0, 0); robot.updateMatrixWorld(true);
     const bb = new THREE.Box3().setFromObject(pivot), c = bb.getCenter(new THREE.Vector3());
-    const benchP = onPM(...d.bench).sub(new THREE.Vector3(c.x, 0, c.z)).setY(-bb.min.y + (d.tray ? 2.4 : 0.4) * MM); // tray items rest on its floor
+    const benchP = onPM(d.bench[0] + (d.tray ? TRAY[0] - 150 : 0), d.bench[1] + (d.tray ? TRAY[1] - 220 : 0)).sub(new THREE.Vector3(c.x, 0, c.z)).setY(-bb.min.y + (d.tray ? 2.4 : 0.4) * MM); // tray items rest on its floor
     pivot.quaternion.copy(home.q); pivot.position.copy(home.p);
     const approach = d.usb ? B(60, 0, 0) : B(...(d.approach || [0, 0, 60]));
     return { ...d, obj: undefined, pivot, home, bench: { p: benchP, q: benchQ }, approach, hover: d.hover && B(...d.hover), explode: d.explode ? B(...d.explode) : approach, delay: d.delay || 0 };
@@ -330,38 +340,40 @@ export async function createBuild({ stage, getModel, url, project = null }) {
     obj.position.copy(B(PM.cx + x, y)).sub(new THREE.Vector3(c.x, 0, c.z)).setY(-b.min.y + 0.4 * MM);
   };
   const extra = (obj, label, info, kind, use) => { obj.traverse((o) => { if (o.isMesh) o.userData.extra = extras.length; }); extras.push({ obj, label, info, kind, use, home: null }); };
-  const rows = project ? [] : await Promise.all(MODULE_ROWS.map((row) => Promise.all(row.map(async ([id, tint, label]) => {
+  const mods = project ? [] : await Promise.all(MODULES.map(async ([id, tint, label, x, y]) => {
     const m = await load(id);
     if (tint) m.traverse((o) => { if (o.name === 'led_lens') { o.material = o.material.clone(); o.material.color.set(LED_BODY[tint]); } });
     m.scale.multiplyScalar(MODULE_SCALE); m.updateMatrixWorld(true);
-    const w = new THREE.Box3().setFromObject(m).getSize(new THREE.Vector3()).x / MM;
-    return { m, w, id, label: label || MOD_LABEL[id], info: `${KIT_PARTS[id]?.blurb || ''} (Shown 2× on the parts mat.)` };
-  }))));
-  rows.forEach((row, r) => { // each row centred on the mat, modules packed left to right with a fixed gap
-    let x = -(row.reduce((t, it) => t + it.w, 0) + MODULE_GAP * (row.length - 1)) / 2;
-    for (const it of row) {
-      lay(it.m, x + it.w / 2, MODULE_ROW_Y[r]); x += it.w + MODULE_GAP;
-      extra(it.m, it.label, it.info, `module_${it.label.toLowerCase().replace(/\W+/g, '_')}`); Object.assign(extras.at(-1), { cat: 'Modules', features: KIT_PARTS[it.id]?.features, part: it.id }); // own id per module (the BOM matches the 'module' prefix)
-    }
-  });
+    return { m, id, x, y, label: label || MOD_LABEL[id], info: `${KIT_PARTS[id]?.blurb || ''} (Shown 2× on the parts mat.)` };
+  }));
+  for (const it of mods) {
+    lay(it.m, it.x, it.y);
+    extra(it.m, it.label, it.info, `module_${it.label.toLowerCase().replace(/\W+/g, '_')}`); Object.assign(extras.at(-1), { cat: 'Modules', features: KIT_PARTS[it.id]?.features, part: it.id }); // own id per kind (the BOM matches the 'module' prefix); a pair shares it
+  }
   const stock = !project ? CABLE_STOCK // a project's mat: just the cables it plugs in (4 motors, plus its sensor's)
-    : [[2, 4, 320, 6, 4], ...(sensorDefs.length ? [[3, sensorDefs.length, 395, 4, sensorDefs.length]] : []), ...(hasUs ? [[4, 1, 460, 4, 1]] : [])];
+    : [[2, 4, -275, 6, 4], ...(sensorDefs.length ? [[3, sensorDefs.length, -190, 4, sensorDefs.length]] : []), ...(hasUs ? [[4, 1, -105, 4, 1]] : [])];
   for (const [n, count, x, useStep0, used] of stock) {
     const useStep = useStep0 == null ? null : sx(useStep0);
     for (let k = 0; k < count; k++) {
       const c = makeJst(n, 150);
       c.rotation.y = Math.PI / 2; // runs front-to-back on the mat
-      lay(c, x + (k - (count - 1) / 2) * 11, 220);
+      lay(c, x + (k - (count - 1) / 2) * 11, 1);
       extra(c, `${n}-pin JST-XH cable`, `15 cm cable with a ${n}-pin plug on each end.`, `cable${n}`, k < used ? useStep : null);
       Object.assign(extras.at(-1), { part: `jst${n}`, cat: 'Cables', specs: [['Connector', `JST-XH style, ${n}-pin, 2.54 mm pitch`], ['Length', '15 cm'], ['In the kit', `${count}`]] });
     }
   }
   const tray = makeTray();
-  lay(tray, 150, 220);
+  lay(tray, ...TRAY);
   extra(tray, 'Hardware tray', 'Five compartments: 30 mm standoffs, 10 mm standoffs, M3 × 30 bolts, M3 nuts and M3 × 6 screws.', 'tray'); extras.at(-1).part = 'chassis';
   extras.forEach((e) => { e.home = e.obj.position.clone(); });
   extras.filter((e) => e.part === SENSOR_MODEL[project]).forEach((e) => { e.obj.visible = false; e.obj.traverse((o) => { o.raycast = () => {}; }); }); // it is on the robot instead
 
+  // the printed zone an item's label belongs to, as its 4 world corners (null: not on a zone)
+  const zoneOf = (o) => {
+    const w = o.getWorldPosition(new THREE.Vector3()), x = w.x / MM - PM.cx, y = -w.z / MM;
+    const z = matZones.find(([, , x0, x1, y0, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1);
+    return z && [[z[2], z[5]], [z[3], z[5]], [z[3], z[4]], [z[2], z[4]]].map(([a, b]) => B(PM.cx + a, b));
+  };
   // name labels under every item on the parts mat (anchors sit at the item's front edge)
   let anchors = [];
   const labelAt = (objs, inTray) => {
@@ -538,7 +550,7 @@ export async function createBuild({ stage, getModel, url, project = null }) {
   }
 
   // --- camera + labels per phase ---
-  const DESK_T = B(PM.cx, 0).add(new THREE.Vector3(0, 0, 0.02)), DESK_P = DESK_T.clone().add(new THREE.Vector3(0, 1.3, 0.62));
+  const DESK_T = B(PM.cx, 0).add(new THREE.Vector3(0, 0, 0.06)), DESK_P = DESK_T.clone().add(new THREE.Vector3(0, 1.42, 0.62)); // whole parts mat, front row clear of the toolbar
   function view(phase) {
     const s = st.step;
     anchors.forEach((o) => deco.remove(o)); anchors = [];
@@ -546,13 +558,17 @@ export async function createBuild({ stage, getModel, url, project = null }) {
       stage.look(DESK_T, DESK_P, 1100);
       const hot = new Set(parts.filter((p) => p.step === s).map((p) => p.group || p.label));
       if (s === usbP.step) hot.add('USB cable');
-      const labels = [...groupsOf(s)].map(([k, list]) => ({ obj: labelAt(list.map((p) => p.pivot), list[0].tray), title: k, part: `build:${list[0].id}`, below: true, hot: hot.has(k) }));
+      const groups = [...groupsOf(s)], idle = groups.filter(([k, list]) => list[0].tray && !hot.has(k)); // tray hardware this step doesn't use: one label for the tray
+      const labels = groups.filter((g) => !idle.includes(g)).map(([k, list]) => ({ obj: labelAt(list.map((p) => p.pivot), list[0].tray), title: list[0].short || k, part: `build:${list[0].id}`, below: true, hot: hot.has(k) }));
+      const trayX = extras.findIndex((e) => e.kind === 'tray');
+      if (idle.length) labels.push({ obj: labelAt(idle.flatMap(([, list]) => list.map((p) => p.pivot)), true), title: idle.length > 1 ? 'Screws, nuts + standoffs' : idle[0][0], part: idle.length > 1 ? `build:x${trayX}` : `build:${idle[0][1][0].id}`, below: true });
       const seen = new Map();
       extras.filter((e) => e.use == null || e.use >= s).forEach((e) => {
-        if (e.kind.startsWith('cable')) { if (!seen.has(e.kind)) seen.set(e.kind, []); seen.get(e.kind).push(e); return; }
-        if (e.kind !== 'tray') labels.push({ obj: labelAt([e.obj]), title: e.label, part: `build:x${extras.indexOf(e)}`, below: true });
+        if (e.kind !== 'tray') { if (!seen.has(e.kind)) seen.set(e.kind, []); seen.get(e.kind).push(e); } // alike items (cables, a sensor pair) share one label
       });
-      seen.forEach((list, kind) => labels.push({ obj: labelAt(list.map((e) => e.obj)), title: `${kind.slice(5)}-pin ×${list.length}`, part: `build:x${extras.indexOf(list[0])}`, below: true, hot: list.some((e) => e.use === s) }));
+      seen.forEach((list, kind) => labels.push({ obj: labelAt(list.map((e) => e.obj)), title: kind.startsWith('cable') ? `${kind.slice(5)}-pin ×${list.length}` : list.length > 1 ? `${list.length}× ${list[0].label}` : list[0].label,
+        part: `build:x${extras.indexOf(list[0])}`, below: true, hot: list.some((e) => e.use === s) }));
+      labels.forEach((l) => { l.zone = zoneOf(l.obj); }); // each label stays inside its printed zone
       stage.setCallouts(labels);
     } else {
       const c = robot.position.clone();
@@ -633,52 +649,72 @@ export async function createBuild({ stage, getModel, url, project = null }) {
   // to its spot on the parts mat (hardware rides inside its tray). Then the usual parts-mat labels appear.
   const kitIdOf = (p) => (p.usb ? null : p.model || (p.motor ? 'tt_motor' : p.wheel ? 'wheel' : 'chassis')); // decks, brackets, standoffs, screws: the chassis kit
   let kit = null;
-  // A kit-box insert: every item (or set of alike items) has its own pocket cut to its size, the pockets packed in rows.
-  // slots: [{ w, d, h }] in metres → { g, lid, H, at(i): pocket i's bottom-left-back corner in world }
+  // A kit-box insert like a real kit's: graphite foam with a pocket cut for every item (or set of alike items), sorted into sections
+  // (big parts, then inputs, then outputs), each row running the full width, and the item's name printed on the foam under its pocket.
+  // slots: [{ w, d, h, label, sec, cat, dark }] in metres → { g, lid, H, pockets: pocket i's back-left corner (world) }
   function makeKitBox(slots) {
-    const wall = 0.008, f = 0.004, rib = 0.002, gapS = 0.004;
-    const order = slots.map((s, i) => i).sort((a, b) => slots[b].d - slots[a].d);
-    const pack = (maxW) => { // shelf packing, deepest pockets first
-      const at = [], shelves = [];
-      let x = 0, z = 0, rowD = 0, W = 0;
-      for (const i of order) {
-        const s = slots[i];
-        if (x > 0 && x + s.w > maxW) { shelves.push({ z, d: rowD, end: x - gapS }); z += rowD + gapS; x = 0; rowD = 0; }
-        at[i] = [x, z, shelves.length]; x += s.w + gapS; rowD = Math.max(rowD, s.d); W = Math.max(W, x - gapS);
-      }
-      shelves.push({ z, d: rowD, end: x - gapS });
-      return { at, shelves, W, D: z + rowD };
+    const wall = 0.008, f = 0.004, gap = 0.004, LBL = 0.013; // gap: foam between pockets; LBL: the printed strip under each row
+    const pack = (maxW) => { // rows left to right; every section starts a new row
+      const rows = [];
+      let row = null;
+      slots.forEach((s, i) => {
+        if (!row || row.sec !== s.sec || row.w + s.w + gap > maxW) rows.push(row = { sec: s.sec, items: [], w: gap, d: 0 });
+        row.items.push(i); row.w += s.w + gap; row.d = Math.max(row.d, s.d);
+      });
+      const W = Math.max(...rows.map((r) => r.w)), D = rows.reduce((n, r) => n + gap + r.d + LBL, 0);
+      return { rows, W, D };
     };
-    // try a range of widths; keep the least wasted box that is roughly 3:2 (no big empty strips at the right or bottom)
-    const widest = Math.max(...slots.map((s) => s.w)), sumW = slots.reduce((n, s) => n + s.w + gapS, 0);
+    // try a range of widths; keep the smallest box that is roughly 3:2
+    const widest = Math.max(...slots.map((s) => s.w)) + 2 * gap, sumW = slots.reduce((n, s) => n + s.w + gap, gap);
     let best = null;
-    for (let k = 0; k <= 60; k++) {
-      const p = pack(widest + (sumW - widest) * (k / 60)), score = p.W * p.D * (1 + 0.6 * Math.abs(Math.log(p.W / p.D / 1.5)));
+    for (let k = 0; k <= 80; k++) {
+      const p = pack(widest + (sumW - widest) * (k / 80)), score = p.W * p.D * (1 + 0.6 * Math.abs(Math.log(p.W / p.D / 1.5)));
       if (!best || score < best.score) best = { ...p, score };
     }
-    const { at, shelves, W } = best;
-    const D = best.D, H = Math.max(...slots.map((s) => s.h)) + 0.008;
+    const { rows, W, D } = best, H = Math.max(...slots.map((s) => s.h)) + 0.008;
     const g = new THREE.Group(), lid = new THREE.Group();
-    const yellow = new THREE.MeshStandardMaterial({ color: 0xf2c21b, roughness: 0.5 }), white = new THREE.MeshStandardMaterial({ color: 0xf3f0e8, roughness: 0.75 }),
-      well = new THREE.MeshStandardMaterial({ color: 0xd9d3c6, roughness: 0.9 }), dark = new THREE.MeshStandardMaterial({ color: 0x24324a, roughness: 0.9 });
-    // ponytail: only the outer rim casts shadows; the thin, flush insert pieces don't (they gave striped shadow acne)
-    const slab = (w, h, d, m, px, py, pz, parent = g, shade = false) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(px, py, pz); b.castShadow = shade; b.receiveShadow = false; b.name = 'kitbox_box'; parent.add(b); return b; };
-    slab(W + 2 * wall, f, D + 2 * wall, white, 0, f / 2, 0).receiveShadow = true;                // floor
+    const yellow = new THREE.MeshStandardMaterial({ color: 0xf2c21b, roughness: 0.5 }), foam = new THREE.MeshStandardMaterial({ color: 0x3b4047, roughness: 0.95 }),
+      floor = new THREE.MeshStandardMaterial({ color: 0x2a2e34, roughness: 1 });
+    // ponytail: only the outer rim casts shadows; the thin foam pieces don't (they gave striped shadow acne)
+    const slab = (w, h, d, m, px, py, pz, parent = g, shade = false) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(px, py, pz); b.castShadow = shade; b.receiveShadow = false; b.name = 'kitbox_box'; b.userData.asBuilt = true; parent.add(b); return b; };
+    slab(W + 2 * wall - 0.0004, f, D + 2 * wall - 0.0004, floor, 0, f / 2, 0).receiveShadow = true; // pocket floors, a hair inside the walls' outer faces
     for (const sx of [-1, 1]) slab(wall, H, D + 2 * wall, yellow, sx * (W / 2 + wall / 2), H / 2, 0, g, true);
     for (const sz of [-1, 1]) slab(W, H, wall, yellow, 0, H / 2, sz * (D / 2 + wall / 2), g, true);
-    const rh = H * 0.7, fh = rh - 0.0006; // fillers sit a hair below the ribs so their tops never share a plane
-    const fill = (x0, z0, w, d) => { // clipped to the inside of the rim, so nothing pokes into the yellow walls
-      const a = Math.max(0, x0), b = Math.min(W, x0 + w), c = Math.max(0, z0), e = Math.min(D, z0 + d);
-      if (b - a > 0.001 && e - c > 0.001) slab(b - a, fh, e - c, white, -W / 2 + (a + b) / 2, f + fh / 2, -D / 2 + (c + e) / 2);
+    const fh = H * 0.7; // foam thickness
+    const web = (x0, z0, w, d) => { if (w > 0.0005 && d > 0.0005) slab(w, fh, d, foam, -W / 2 + x0 + w / 2, f + fh / 2, -D / 2 + z0 + d / 2); }; // a piece of foam, x0/z0 from the back-left inside corner
+    const CHIP = { 0: '#5b8cff', 1: '#8fb3c7', 2: '#3ccf74', 3: '#ff8a3d', 4: '#f2c21b', 5: '#a77bff' }; // Components filter colours, lifted for dark foam
+    const label = (text, cat, x0, z0, maxW) => { // printed on the foam strip: a category chip, then the name
+      const px = 9000, hText = LBL * 0.56, fs = Math.round(hText * px), pad = Math.round(fs * 0.5);
+      const c = document.createElement('canvas'), cx = c.getContext('2d'), font = `600 ${fs}px "Figtree Variable", "Segoe UI", sans-serif`;
+      cx.font = font;
+      const tw = Math.ceil(cx.measureText(text).width), chip = Math.round(fs * 0.62);
+      c.width = chip + pad + tw + 4; c.height = Math.round(fs * 1.4);
+      cx.font = font; cx.fillStyle = CHIP[cat] || '#cfd6df'; cx.beginPath(); cx.roundRect(1, (c.height - chip) / 2, chip, chip, chip * 0.25); cx.fill();
+      cx.fillStyle = '#e7eaee'; cx.textBaseline = 'middle'; cx.fillText(text, chip + pad, c.height / 2 + fs * 0.04);
+      const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+      const k = Math.min(1, maxW / (c.width / px)), w = (c.width / px) * k, h = (c.height / px) * k;
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.3, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }));
+      m.rotation.x = -Math.PI / 2; m.position.set(-W / 2 + x0 + w / 2, f + fh + 0.0002, -D / 2 + z0 + LBL / 2); m.raycast = () => {}; m.name = 'kitbox_box'; m.userData.asBuilt = true;
+      g.add(m);
     };
-    shelves.forEach((sh) => fill(sh.end + rib, sh.z - rib, W - sh.end - rib, sh.d + 2 * rib)); // solid insert past the last pocket of a row
-    const pockets = slots.map((s, i) => { // each pocket: a darker well and a white rim of ribs around it; solid insert fills the rest of its row
-      const cx = -W / 2 + at[i][0] + s.w / 2, cz = -D / 2 + at[i][1] + s.d / 2, sh = shelves[at[i][2]];
-      fill(at[i][0] - rib, at[i][1] + s.d + rib, s.w + 2 * rib, sh.d - s.d - rib);
-      slab(s.w, 0.001, s.d, s.dark ? dark : well, cx, f + 0.0005, cz); // clear acrylic (decks, brackets) needs a dark well to show
-      for (const sx of [-1, 1]) slab(rib, rh, s.d + rib, white, cx + sx * (s.w / 2 + rib / 2), f + rh / 2, cz);
-      for (const sz of [-1, 1]) slab(s.w + 2 * rib, rh, rib, white, cx, f + rh / 2, cz + sz * (s.d / 2 + rib / 2));
-      return new THREE.Vector3(-W / 2 + at[i][0], f + 0.001, -D / 2 + at[i][1]).add(ROBOT_AT);
+    const pockets = [];
+    let z = 0;
+    rows.forEach((r) => {
+      web(0, z, W, gap); z += gap; // foam behind the row
+      const extra = (W - r.w) / r.items.length; // stretch the pockets so the row runs the full width
+      let x = 0;
+      r.items.forEach((i) => {
+        const s = slots[i], w = s.w + extra;
+        web(x, z, gap, r.d); x += gap;
+        const lift = Math.max(0, fh - s.h - 0.004); // the pocket is cut only as deep as its item: its top sits just under the foam surface
+        if (lift > 0.0005) slab(w, lift, r.d, floor, -W / 2 + x + w / 2, f + lift / 2, -D / 2 + z + r.d / 2);
+        pockets[i] = new THREE.Vector3(-W / 2 + x + extra / 2, f + lift + 0.001, -D / 2 + z + (r.d - s.d) / 2).add(ROBOT_AT); // the item's layout box, centred in its pocket
+        label(s.label, s.cat, x, z + r.d, w);
+        x += w;
+      });
+      web(x, z, W - x, r.d); // the last foam rib, at the right wall
+      z += r.d;
+      web(0, z, W, LBL); z += LBL; // the printed strip
     });
     lid.position.set(0, H, -D / 2 - wall); g.add(lid);
     slab(W + 2 * wall + 0.004, 0.003, D + 2 * wall + 0.004, new THREE.MeshStandardMaterial({ color: 0xdfe8f2, roughness: 0.15, transparent: true, opacity: 0.3, name: 'acrylic_lid' }), 0, 0.0015, D / 2 + wall, lid);
@@ -691,18 +727,19 @@ export async function createBuild({ stage, getModel, url, project = null }) {
     const cw = Math.min(W * 0.6, D * 1.1);
     for (const side of [1, -1]) { // on top while shut, underneath (facing the camera) once open
       const card = new THREE.Mesh(new THREE.PlaneGeometry(cw, cw / 2), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6 }));
-      card.rotation.x = -side * Math.PI / 2; card.position.set(0, side > 0 ? 0.0032 : -0.0002, D / 2 + wall); card.name = 'kitbox_box'; lid.add(card);
+      card.rotation.x = -side * Math.PI / 2; card.position.set(0, side > 0 ? 0.0032 : -0.0002, D / 2 + wall); card.name = 'kitbox_box'; card.userData.asBuilt = true; lid.add(card);
     }
     g.position.copy(ROBOT_AT);
     return { g, lid, H, pockets, W: W + 2 * wall, D: D + 2 * wall };
   }
   const KIT_SIZE = { battery: 1.8, base: 1.4, servo: 0.8, gas: 0.75 }; // in-box scale vs the workbench
-  const KIT_TURN = { servo: Math.PI / 2 }; // in-box turn about the vertical (servo: lead runs the other way)
+  const KIT_TURN = { touch: Math.PI / 2 }; // in-box turn about the vertical, so it lies as wide as its row is deep
   // which pocket an item goes in: alike items share one (laid side by side; the two decks stacked; wheels and motors 2 × 2)
   const slotKey = (m) => (/^deck_/.test(m.key) ? 'decks' : /^motor_/.test(m.key) ? 'motors' : /^bracket_/.test(m.key) ? 'brackets' : /^wheel_/.test(m.key) ? 'wheels' : /^cable/.test(m.key) ? 'cables' : m.key);
   function kitSetup() { // once, with everything at its parts-mat spot
     const tray = extras.find((e) => e.kind === 'tray'), wpos = (o) => o.parent.localToWorld(o.position.clone());
-    const solo = [...parts.filter((p) => !p.tray).map((p) => ({ obj: p.pivot, id: kitIdOf(p), key: p.id })), ...extras.map((e, i) => ({ obj: e.obj, id: e.part, key: e.kind.startsWith('cable') ? e.kind : `x${i}` }))];
+    const solo = [...parts.filter((p) => !p.tray).map((p) => ({ obj: p.pivot, id: kitIdOf(p), key: p.id, label: p.group || p.label })),
+      ...extras.map((e, i) => ({ obj: e.obj, id: e.part, key: /^(cable|module_)/.test(e.kind) ? e.kind : `x${i}`, label: e.kind === 'tray' ? 'Screws + standoffs' : e.label }))]; // a sensor pair shares its kind: one pocket
     world.updateMatrixWorld(true);
     const movers = solo.map((m) => {
       const qTo = m.obj.quaternion.clone(); let qBox = qTo;
@@ -744,9 +781,18 @@ export async function createBuild({ stage, getModel, url, project = null }) {
       const cols = key === 'wheels' || key === 'motors' ? 2 : key === 'brackets' ? 4 : list.length, cw = Math.max(...list.map((m) => m.size.x)), cd = Math.max(...list.map((m) => m.size.z));
       const rows = Math.ceil(list.length / cols), w = cols * cw + (cols - 1) * G, d = rows * cd + (rows - 1) * G;
       list.forEach((m, i) => { m.local = [M + (i % cols) * (cw + G) + cw / 2, 0, M + Math.floor(i / cols) * (cd + G) + cd / 2]; });
-      return { list, w: w + 2 * M, d: d + 2 * M, h: Math.max(...list.map((m) => m.size.y)), dark: key === 'brackets' || key === 'decks' }; // clear acrylic: dark well
+      return { list, w: w + 2 * M, d: d + 2 * M, h: Math.max(...list.map((m) => m.size.y)) };
     });
+    // sorted like the Components list: the big parts (body, motion, brain, cables) first, then inputs, then outputs
+    const NAME = { decks: 'Bottom + top deck', cables: 'JST cables', wheels: '4× wheel' };
+    slots.forEach((sl) => {
+      const m = sl.list[0], key = slotKey(m), [cat, , n] = partGroup(m.id ?? 'jst2'); // USB cable: with the cables
+      sl.cat = cat; sl.sec = cat === 2 ? 1 : cat === 3 ? 2 : 0; sl.order = n;
+      sl.label = NAME[key] || (sl.list.length > 1 && !/^\d/.test(m.label) ? `${sl.list.length}× ${m.label}` : m.label);
+    });
+    slots.sort((a, b) => a.sec - b.sec || (a.sec ? a.cat - b.cat || a.order - b.order : b.d - a.d)); // big parts deepest first: they pack into two even rows
     kit = makeKitBox(slots);
+    if (import.meta.env.DEV) window.__kitSlots = slots; // dev-only: browser checks of the box layout
     world.add(kit.g);
     slots.forEach((s, i) => s.list.forEach((m) => { m.pocket = kit.pockets[i].clone().add(new THREE.Vector3(...m.local)); }));
     kit.movers = slots.flatMap((s) => s.list).sort((a, b) => movers.indexOf(a) - movers.indexOf(b)); // fly out in workbench order
@@ -846,7 +892,7 @@ export async function createBuild({ stage, getModel, url, project = null }) {
 function boxOf(objs) { const b = new THREE.Box3(); objs.forEach((o) => b.expandByObject(o)); return b; }
 
 // cutting mat: 1 cm grid, 5 cm major lines, ruler numbers, a title in the corner
-function makeMat(M, title, green) {
+function makeMat(M, title, green, zones = []) {
   const px = 3, c = document.createElement('canvas');
   c.width = M.w * px; c.height = M.d * px;
   const g = c.getContext('2d');
@@ -857,6 +903,14 @@ function makeMat(M, title, green) {
   for (let x = 50; x < M.w; x += 50) g.fillText(String(x / 10), x * px + 4, c.height - 9 * px);
   for (let y = 50; y < M.d; y += 50) g.fillText(String(y / 10), 4, c.height - y * px + 4);
   g.fillStyle = 'rgba(255,255,255,.8)'; g.font = `700 ${11 * px}px "Barlow Condensed", sans-serif`; g.fillText(title, 10 * px, 6 * px);
+  // printed sorting zones: a rounded outline, a chip in the group's colour and its name (colours as on the kit-box labels)
+  const CHIP = ['#5b8cff', '#8fb3c7', '#3ccf74', '#ff8a3d', '#f2c21b', '#a77bff'];
+  for (const [name, cat, x0, x1, y0, y1] of zones) {
+    const X = (x) => (x + M.w / 2) * px, Y = (y) => (M.d / 2 - y) * px;
+    g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 1.4 * px; g.beginPath(); g.roundRect(X(x0), Y(y1), X(x1) - X(x0), Y(y0) - Y(y1), 6 * px); g.stroke();
+    g.fillStyle = CHIP[cat]; g.beginPath(); g.roundRect(X(x0) + 7 * px, Y(y1) + 6.5 * px, 6 * px, 6 * px, 1.5 * px); g.fill();
+    g.fillStyle = 'rgba(255,255,255,.88)'; g.font = `600 ${8.5 * px}px "Figtree Variable", "Segoe UI", sans-serif`; g.textBaseline = 'middle'; g.fillText(name, X(x0) + 16 * px, Y(y1) + 9.8 * px); g.textBaseline = 'top';
+  }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
   const side = new THREE.MeshStandardMaterial({ color: green ? 0x24564a : 0x214a5b, roughness: 0.9 });
@@ -878,7 +932,7 @@ function makeDesk() {
     g.moveTo(0, y); g.bezierCurveTo(600, y + Math.random() * 20 - 10, 1400, y + Math.random() * 20 - 10, c.width, y + Math.random() * 16 - 8); g.stroke();
   }
   const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8; // seen at a low angle from inside the box: keeps the grain from smearing
   const top = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.7 }), edge = new THREE.MeshStandardMaterial({ color: 0xa8744a, roughness: 0.75 });
   const m = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.03, 0.95), [edge, edge, top, edge, edge, edge]);
   m.position.set(0.1, -0.0015 - 0.015, 0); m.receiveShadow = true; m.raycast = () => {}; m.name = 'desk';

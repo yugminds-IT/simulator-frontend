@@ -257,7 +257,7 @@ async function route() {
   if (item.part) {
     const url = modelUrl(item.id);
     if (!url) return stage.setCallouts([]);
-    const root = await stage.load(url, item.id === 'chassis' ? (r) => stage.mountWheels(r, modelUrl('wheel'), modelUrl('tt_motor')) : null);
+    const root = await stage.load(item.id === 'base' ? await shotModel('base') : url, item.id === 'chassis' ? (r) => stage.mountWheels(r, modelUrl('wheel'), modelUrl('tt_motor')) : null);
     if (current !== item) return;
     kitInfo = { esp: root, modules: [] };
     stage.setCallouts(partCallouts(item));
@@ -430,9 +430,10 @@ async function showBook(n) { // n = 0: the shelf of books, else one book's page
   const p = { done, name: (id) => byId(id)?.name || pretty(id), parts: partsSeen, firstNew };
   fillShots(n ? renderBookHub($('#home'), n, p) : renderLauncher($('#home'), { key: 'books', heading: 'Choose your book', items: bookItems(p), back: '#/', backLabel: 'All kits' }));
 }
-async function fillShots(shots) { // s.size = [w, h, fit] for big renders (launcher backdrop); model 'base+' = the assembled Robo Coders board
-  const model = (m) => (m === 'base+' ? mod.assembledBase({ base: modelUrl('base'), esp32: modelUrl('esp32'), tb6612: modelUrl('tb6612') }) : modelUrl(m));
-  for (const s of shots) { const src = await mod.thumbnail(await model(s.model), ...(s.size || [])).catch(() => null); if (src) s.el.style.backgroundImage = `url(${src})`; }
+// The base board is only ever shown finished, with the ESP32 and TB6612 seated (model 'base' or 'base+').
+const shotModel = (m) => (m === 'base+' || m === 'base' ? mod.assembledBase({ base: modelUrl('base'), esp32: modelUrl('esp32'), tb6612: modelUrl('tb6612') }) : modelUrl(m));
+async function fillShots(shots) { // s.size = [w, h, fit] for big renders (launcher backdrop)
+  for (const s of shots) { const src = await mod.thumbnail(await shotModel(s.model), ...(s.size || [])).catch(() => null); if (src) s.el.style.backgroundImage = `url(${src})`; }
 }
 
 // --- build guide tab -------------------------------------------------------------------------------
@@ -628,7 +629,7 @@ function setupEsp(node) {
   if (!espNode) return;
   stage.decals(espNode, ESP32_DECALS);
   stage.hitAreas(espNode, /^esp32_pin_/);
-  if (!(item.kit?.length || item.chassis)) stage.usbCable(espNode, usbPlugged);
+  if (!(item.kit?.length || item.chassis || item.id === 'base')) stage.usbCable(espNode, usbPlugged); // the base board runs from its battery
   powerLed();
 }
 const powerLed = () => espNode && stage.glow(espNode, 'esp32_led_power', powered(), 0xff3020, 'anchor_esp32_led_power', 6);
@@ -2043,7 +2044,7 @@ async function fillThumbs() {
   for (const ph of document.querySelectorAll('.ph[data-model]')) {
     const url = modelUrl(ph.dataset.model);
     if (!url) continue;
-    const src = await mod.thumbnail(url).catch(() => null);
+    const src = await mod.thumbnail(await shotModel(ph.dataset.model)).catch(() => null);
     if (src && ph.isConnected) { const img = new Image(); img.src = src; img.alt = ''; ph.replaceWith(img); }
   }
 }

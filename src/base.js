@@ -6,10 +6,10 @@ import { LOGO } from './sensors.js';
 // [title, description]
 export const BASE_PART = {
   pcb: ['Robo Coders base board', 'Every module plugs into this board with a JST-XH cable — no breadboard wiring.'],
-  esp32_socket: ['ESP32 socket (U1 + U2)', 'The two 15-pin female headers U1 and U2. The ESP32 DevKit\'s male pins push into them, USB toward the top edge.'],
+  esp32_socket: ['ESP32 in socket U1 + U2', 'The two 15-pin female headers U1 and U2. The ESP32 DevKit\'s male pins push into them, USB toward the top edge.'],
   u1: ['U1 · ESP32 header (right)', '15-pin female header: the ESP32\'s right-hand pins (VIN … EN) push in here.'],
   u2: ['U2 · ESP32 header (left)', '15-pin female header: the ESP32\'s left-hand pins (3V3 … D23) push in here.'],
-  tb6612_socket: ['Motor driver socket (U6)', 'The TB6612FNG breakout plugs in here. It drives the left and right motors.'],
+  tb6612_socket: ['Motor driver in socket U6', 'The TB6612FNG breakout plugs in here. It drives the left and right motors.'],
   power_module: ['CA-1235 power module (U3)', 'Turns the battery voltage into the 5 V rail: IN from the battery through SW1, OUT to 5 V. It sits under the ESP32.'],
   sw1: ['SW1 power switch (ON/OFF)', 'KFC5858 self-locking push switch between BAT and the power module. Click it to switch the kit on or off.'],
   switch_motor_v: ['7V/5V switch', 'Chooses the motor supply (VMOT): battery voltage (7 V) or the 5 V rail. Click to flip it.'],

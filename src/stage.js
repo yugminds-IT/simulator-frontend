@@ -177,8 +177,10 @@ export function createStage(el) {
     el.querySelector('.oled-view')?.setAttribute('hidden', ''); // a new scene: no OLED until one draws
     content.traverse((o) => {
       if (!o.isMesh) return;
-      o.castShadow = o.receiveShadow = true;
-      if (/^acrylic/.test(o.material?.name)) { o.material = glass(o.material); o.userData.glass = true; }
+      if (!o.userData.asBuilt) { // asBuilt: the scene set its own shadows and materials (kit box); showing it again must not undo them
+        o.castShadow = o.receiveShadow = true;
+        if (/^acrylic/.test(o.material?.name)) { o.material = glass(o.material); o.userData.glass = true; }
+      }
       seeThrough(o);
     });
     ink(content);
@@ -189,7 +191,7 @@ export function createStage(el) {
   }
 
   async function load(url, prep) {
-    const root = (await getModel(url)).clone(true);
+    const root = url.isObject3D ? url : (await getModel(url)).clone(true); // a url, or a ready group (assembledBase)
     if (prep) await prep(root);
     setContent(root);
     return root;
@@ -464,22 +466,68 @@ export function createStage(el) {
     }
   }
 
+  let layoutKey = '', layoutFor = null;
   function drawLeaders() {
     const rect = el.getBoundingClientRect();
     let html = '';
-    const placed = []; // pill labels: pushed down until they clear the ones already placed
-    for (const { c, p } of pills ? callouts.map((c) => ({ c, p: project(c.obj) })).sort((a, b) => a.p.y - b.p.y || a.p.x - b.p.x) : []) {
-      const w = c.tag.offsetWidth, h = c.tag.offsetHeight, l = Math.max(4, Math.min(el.clientWidth - w - 4, c.below ? p.x - w / 2 : p.x + 12)), t0 = c.below ? p.y + 2 : p.y - 14;
-      let t = t0;
-      for (let hit = true; hit;) {
-        hit = false;
-        for (const o of placed) if (l < o.r && o.l < l + w && t < o.b && o.t < t + h) { t = o.b + 1; hit = true; }
-      }
-      placed.push({ l, r: l + w, t, b: t + h });
-      c.tag.style.left = `${l}px`; c.tag.style.top = `${t}px`;
-      if (c.below) continue;
-      html += `<circle cx="${p.x}" cy="${p.y}" r="5.5" fill="${c.color}" class="ring"/>`;
+    if (pills && callouts.some((c) => c.zone)) { // mat labels keep their size relative to the mat: smaller (to 70%) when the mat is drawn smaller
+      const a = controls.target.clone().project(camera), b = controls.target.clone().add(new THREE.Vector3(0.1, 0, 0)).project(camera);
+      const k = Math.min(1, Math.max(0.7, Math.abs(b.x - a.x) / 2 * el.clientWidth / 78)), v = `${(12.5 * k).toFixed(1)}px`; // 78 px per 100 mm: the default view at 1440 wide
+      if (tagLayer.style.getPropertyValue('--pill') !== v) tagLayer.style.setProperty('--pill', v);
     }
+    const items = pills ? callouts.map((c) => { const r = c.tag.getBoundingClientRect(); return { c, p: project(c.obj), w: r.width, h: r.height }; }) : []; // exact sizes: whole-pixel ones let neighbours touch
+    const key = pills && `${camera.matrixWorld.elements.map((e) => e.toFixed(4))}|${el.clientWidth}x${el.clientHeight}|${items.map((i) => i.w.toFixed(1)).join()}`;
+    if (pills && (key !== layoutKey || callouts !== layoutFor)) { // pill labels: only re-laid when the view or the labels change
+      layoutKey = key; layoutFor = callouts;
+      // c.zone: world corners of the printed mat zone the item lies in; its label stays inside the zone's lines
+      const box = (c, w, h) => {
+        if (!c.zone) return null;
+        const z = c.zone.map((v) => v.clone().project(camera)), xs = z.map((q) => (q.x + 1) / 2 * el.clientWidth).sort((a, b) => a - b), ys = z.map((q) => (1 - q.y) / 2 * el.clientHeight).sort((a, b) => a - b);
+        return { L0: xs[1] + 3, L1: xs[2] - w - 3, T0: ys[1] + 3, T1: ys[2] - h - 3 }; // inner box of the (perspective) zone
+      };
+      const placed = [], pos = new Map();
+      const lay = (order) => { // greedy: each label below its item, pushed down past earlier ones; one that leaves its zone takes the nearest free spot inside
+        const base = placed.length, mine = new Map();
+        let fails = 0;
+        for (const { c, p, w, h } of order) {
+          const t0 = c.below ? p.y + 2 : p.y - 14, hits = (x, y) => placed.some((o) => x < o.r && o.l < x + w && y < o.b && o.t < y + h);
+          let l = Math.max(4, Math.min(el.clientWidth - w - 4, c.below ? p.x - w / 2 : p.x + 12)), t = t0;
+          const drop = () => { for (let hit = true; hit;) { hit = false; for (const o of placed) if (l < o.r && o.l < l + w && t < o.b && o.t < t + h) { t = o.b + 1; hit = true; } } };
+          drop();
+          const zb = box(c, w, h);
+          if (zb && zb.L1 >= zb.L0 && zb.T1 >= zb.T0 && (t !== t0 || l < zb.L0 || l > zb.L1 || t > zb.T1)) {
+            const lc = Math.min(zb.L1, Math.max(zb.L0, l));
+            let best = null;
+            const inX = (x) => x >= zb.L0 && x <= zb.L1, inY = (y) => y >= Math.max(zb.T0, Math.min(zb.T1, t0)) && y <= zb.T1;
+            const X = [zb.L0, zb.L1, lc, ...placed.flatMap((o) => [o.r + 1, o.l - w - 1])].filter(inX), Y = [zb.T1, ...placed.map((o) => o.b + 1)].filter(inY); // flush against the zone edges and the other labels
+            for (let x = zb.L0; x <= zb.L1; x += 6) X.push(x);
+            for (let y = Math.max(zb.T0, Math.min(zb.T1, t0)); y <= zb.T1; y += 4) Y.push(y);
+            for (const y of Y) for (const x of X) {
+              const cost = Math.abs(x - lc) + 3 * Math.abs(y - t0);
+              if ((!best || cost < best[2]) && !hits(x, y)) best = [x, y, cost];
+            }
+            if (best) [l, t] = best; else { l = lc; t = t0; drop(); fails++; } // ponytail: no room at this zoom; stay between the side lines, clear of other labels
+          } else if (zb && (zb.L1 < zb.L0 || zb.T1 < zb.T0)) fails++;
+          placed.push({ l, r: l + w, t, b: t + h }); mine.set(c, [l, t, w, h]);
+        }
+        placed.length = base; // trial only: the caller keeps the best
+        return { mine, fails, rects: [...mine.values()].map(([l, t, w, h]) => ({ l, r: l + w, t, b: t + h })) };
+      };
+      const row = (a, b) => Math.round(a.p.y / 24) - Math.round(b.p.y / 24) || a.p.x - b.p.x;
+      const groups = new Map(); // zones don't share space: lay out zone by zone, each in whichever of a few orders fits all its labels
+      items.forEach((i) => { const k = i.c.zone ? `${i.c.zone[0].x},${i.c.zone[0].z}` : ''; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(i); });
+      for (const list of groups.values()) {
+        let best = null;
+        for (const cmp of [(a, b) => a.p.y - b.p.y || a.p.x - b.p.x, row, (a, b) => a.p.x - b.p.x || a.p.y - b.p.y]) {
+          const r = lay([...list].sort(cmp));
+          if (!best || r.fails < best.fails) best = r;
+          if (!best.fails) break;
+        }
+        placed.push(...best.rects); best.mine.forEach((v, c) => pos.set(c, v));
+      }
+      pos.forEach(([l, t], c) => { c.tag.style.left = `${l}px`; c.tag.style.top = `${t}px`; });
+    }
+    for (const { c, p } of items) if (!c.below) html += `<circle cx="${p.x}" cy="${p.y}" r="5.5" fill="${c.color}" class="ring"/>`;
     for (const c of callouts) {
       if (pills) continue;
       const p = project(c.obj);
@@ -544,18 +592,25 @@ export function createStage(el) {
     if (!hoverLift || !o?.parent) return [];
     if (o.material?.visible === false) o = o.parent; // a finger-sized hit box: lift the pin it belongs to
     if (o.parent.userData.oled || /^oled_/.test(o.name)) return []; // the OLED's live picture is a separate layer: lifting its glass would cover the text
-    const root = o.name.replace(/_pin_\d+$/, ''), parts = o.parent.children.filter((c) => c.name === root || c.name.startsWith(`${root}_`));
+    // the whole component: same-name siblings, plus every sibling with the same hover label (WROOM can + module + pads)
+    const root = o.name.replace(/_pin_\d+$/, ''), tag = hoverLabel(o.name);
+    const parts = o.parent.children.filter((c) => c.isMesh && (c.name === root || c.name.startsWith(`${root}_`) || (tag && hoverLabel(c.name) === tag)));
     if (!parts.includes(o)) parts.push(o);
     if (parts.some((c) => state.get(c)?.y !== undefined)) return []; // press() owns these parts' height (buttons, switch caps)
     const box = new THREE.Box3(); parts.forEach((c) => box.expandByObject(c));
     const size = box.getSize(new THREE.Vector3());
-    return Math.max(size.x, size.z) > 40 * MM ? [] : parts; // boards and plates stay put
+    if (Math.max(size.x, size.z) > 40 * MM) return []; // boards and plates stay put
+    // printed text sitting on the part (decals are children of the module root, not of the mesh): lift it too
+    const p = new THREE.Vector3(), top = box.clone().expandByScalar(0.6 * MM);
+    return parts.concat((o.parent.userData.decalMeshes || []).filter((d) => top.containsPoint(d.getWorldPosition(p)) && p.y > box.max.y - 0.6 * MM));
   }
   function lift(parts, up) {
     for (const o of parts) {
       let l = lifts.get(o);
       if (!l) {
-        const w = o.getWorldPosition(new THREE.Vector3()), a = o.parent.worldToLocal(w.clone()), b = o.parent.worldToLocal(w.add(new THREE.Vector3(0, 2.5 * MM, 0)));
+        // away from the board: up, or down for a part on the underside (IR's LM393), which would otherwise sink into the PCB
+        const under = new THREE.Box3().setFromObject(o).max.y <= o.parent.getWorldPosition(new THREE.Vector3()).y + 0.1 * MM;
+        const w = o.getWorldPosition(new THREE.Vector3()), a = o.parent.worldToLocal(w.clone()), b = o.parent.worldToLocal(w.add(new THREE.Vector3(0, (under ? -2.5 : 2.5) * MM, 0)));
         l = { v: b.sub(a), cur: 0, target: 0 }; lifts.set(o, l);
       }
       l.target = up ? 1 : 0;
